@@ -41,8 +41,10 @@ export default function StaffCommand() {
         <StatCard icon={IndianRupee}  label="Monthly Payroll" value={formatINR(totalPayroll)} accent="ai"/>
       </div>
 
+      <DailyAttendance staff={staff} />
+
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-border"><h3 className="font-display font-semibold">Roster</h3></div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-surface text-xs text-muted-foreground uppercase">
