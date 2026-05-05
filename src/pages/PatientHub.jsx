@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Plus, Phone, Calendar, AlertTriangle, Sparkles } from 'lucide-react';
+import { Search, Plus, Phone, Calendar, AlertTriangle, Sparkles, X } from 'lucide-react';
 import { usePatients } from '../hooks/usePatients';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorState from '../components/ui/ErrorState';
@@ -7,12 +7,21 @@ import Badge from '../components/ui/Badge';
 import Avatar from '../components/ui/Avatar';
 import SlidePanel from '../components/ui/SlidePanel';
 import AIBadge from '../components/ui/AIBadge';
+import Tabs from '../components/ui/Tabs';
+import InvoiceList from '../components/ui/InvoiceList';
+import InvoicePreview from '../components/ui/InvoicePreview';
+import Modal from '../components/ui/Modal';
+import WhatsAppConversationHub from '../components/ui/WhatsAppConversationHub';
+import WhatsAppThread from '../components/ui/WhatsAppThread';
 import { useToast } from '../context/ToastContext';
 
 export default function PatientHub() {
   const [search, setSearch] = useState('');
   const [risk, setRisk] = useState('');
   const [selected, setSelected] = useState(null);
+  const [activeTab, setActiveTab] = useState('profile');
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [selectedConversation, setSelectedConversation] = useState(null);
   const { data, loading, error, refetch, createPatient } = usePatients({ search, riskLevel: risk });
   const { showToast } = useToast();
 
@@ -121,62 +130,153 @@ export default function PatientHub() {
         </div>
       )}
 
-      <SlidePanel open={!!selected} onClose={() => setSelected(null)} title="Patient Profile" width="max-w-lg">
+      <SlidePanel open={!!selected} onClose={() => { setSelected(null); setActiveTab('profile'); setSelectedConversation(null); }} title={selected?.name || 'Patient Profile'} width="max-w-2xl">
         {selected && (
           <div className="space-y-5">
-            <div className="flex items-center gap-3">
-              <Avatar name={selected.name} size={56}/>
-              <div>
-                <div className="font-display font-semibold text-lg">{selected.name}</div>
-                <div className="text-xs text-muted-foreground">{selected.age}y • {selected.gender} • {selected.bloodGroup}</div>
-                <div className="text-xs font-mono text-muted-foreground mt-0.5">{selected.abhaId}</div>
-              </div>
+            {/* Tabs */}
+            <div className="flex gap-1 border-b border-border overflow-x-auto">
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === 'profile'
+                    ? 'border-[var(--brand)] text-[var(--brand)]'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Profile
+              </button>
+              <button
+                onClick={() => setActiveTab('invoices')}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === 'invoices'
+                    ? 'border-[var(--brand)] text-[var(--brand)]'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Invoices
+              </button>
+              <button
+                onClick={() => setActiveTab('whatsapp')}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === 'whatsapp'
+                    ? 'border-[var(--brand)] text-[var(--brand)]'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                WhatsApp
+              </button>
             </div>
 
-            <div className="rounded-xl p-4 bg-ai-soft border border-[color-mix(in_oklab,var(--ai)_30%,transparent)]">
-              <div className="flex items-center gap-2 mb-2"><AIBadge label="Risk Score" /><span className="text-xs text-muted-foreground">Updated just now</span></div>
-              <div className="flex items-baseline gap-2">
-                <div className="text-3xl font-display font-bold text-[var(--ai)]">74</div>
-                <div className="text-xs text-muted-foreground">/100 — {selected.riskLevel} risk</div>
-              </div>
-              <ul className="mt-3 space-y-1.5 text-xs text-foreground">
-                <li className="flex gap-2"><Sparkles size={12} className="text-[var(--ai)] mt-0.5"/>Missed last 2 appointments</li>
-                <li className="flex gap-2"><Sparkles size={12} className="text-[var(--ai)] mt-0.5"/>HbA1c trending up</li>
-                <li className="flex gap-2"><Sparkles size={12} className="text-[var(--ai)] mt-0.5"/>No prescription refill in 45 days</li>
-              </ul>
-            </div>
+            {/* Profile Tab */}
+            {activeTab === 'profile' && (
+              <div className="space-y-5">
+                <div className="flex items-center gap-3">
+                  <Avatar name={selected.name} size={56}/>
+                  <div>
+                    <div className="font-display font-semibold text-lg">{selected.name}</div>
+                    <div className="text-xs text-muted-foreground">{selected.age}y • {selected.gender} • {selected.bloodGroup}</div>
+                    <div className="text-xs font-mono text-muted-foreground mt-0.5">{selected.abhaId}</div>
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="bg-surface rounded-lg p-3">
-                <div className="text-xs text-muted-foreground">Phone</div>
-                <div className="font-medium flex items-center gap-1.5"><Phone size={12}/>{selected.phone}</div>
-              </div>
-              <div className="bg-surface rounded-lg p-3">
-                <div className="text-xs text-muted-foreground">Last Visit</div>
-                <div className="font-medium flex items-center gap-1.5"><Calendar size={12}/>{selected.lastVisit}</div>
-              </div>
-            </div>
+                <div className="rounded-xl p-4 bg-ai-soft border border-[color-mix(in_oklab,var(--ai)_30%,transparent)]">
+                  <div className="flex items-center gap-2 mb-2"><AIBadge label="Risk Score" /><span className="text-xs text-muted-foreground">Updated just now</span></div>
+                  <div className="flex items-baseline gap-2">
+                    <div className="text-3xl font-display font-bold text-[var(--ai)]">74</div>
+                    <div className="text-xs text-muted-foreground">/100 — {selected.riskLevel} risk</div>
+                  </div>
+                  <ul className="mt-3 space-y-1.5 text-xs text-foreground">
+                    <li className="flex gap-2"><Sparkles size={12} className="text-[var(--ai)] mt-0.5"/>Missed last 2 appointments</li>
+                    <li className="flex gap-2"><Sparkles size={12} className="text-[var(--ai)] mt-0.5"/>HbA1c trending up</li>
+                    <li className="flex gap-2"><Sparkles size={12} className="text-[var(--ai)] mt-0.5"/>No prescription refill in 45 days</li>
+                  </ul>
+                </div>
 
-            <div>
-              <div className="text-xs font-semibold uppercase text-muted-foreground mb-2">Conditions</div>
-              <div className="flex flex-wrap gap-1.5">
-                {selected.conditions.length > 0 ? selected.conditions.map(c => <Badge key={c} variant="info">{c}</Badge>) : <span className="text-xs text-muted-foreground">None recorded</span>}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs font-semibold uppercase text-muted-foreground mb-2">Allergies</div>
-              <div className="flex flex-wrap gap-1.5">
-                {selected.allergies.length > 0 ? selected.allergies.map(c => <Badge key={c} variant="danger"><AlertTriangle size={10}/>{c}</Badge>) : <span className="text-xs text-muted-foreground">None known</span>}
-              </div>
-            </div>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="bg-surface rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground">Phone</div>
+                    <div className="font-medium flex items-center gap-1.5"><Phone size={12}/>{selected.phone}</div>
+                  </div>
+                  <div className="bg-surface rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground">Last Visit</div>
+                    <div className="font-medium flex items-center gap-1.5"><Calendar size={12}/>{selected.lastVisit}</div>
+                  </div>
+                </div>
 
-            <div className="flex gap-2">
-              <button className="flex-1 px-3 py-2 bg-[var(--brand)] text-white rounded-lg text-sm font-medium hover:bg-[var(--brand-hover)]">Book Appointment</button>
-              <button className="flex-1 px-3 py-2 bg-surface text-foreground rounded-lg text-sm font-medium hover:bg-surface-alt border border-border">View Records</button>
-            </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase text-muted-foreground mb-2">Conditions</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {selected.conditions.length > 0 ? selected.conditions.map(c => <Badge key={c} variant="info">{c}</Badge>) : <span className="text-xs text-muted-foreground">None recorded</span>}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase text-muted-foreground mb-2">Allergies</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {selected.allergies.length > 0 ? selected.allergies.map(c => <Badge key={c} variant="danger"><AlertTriangle size={10}/>{c}</Badge>) : <span className="text-xs text-muted-foreground">None known</span>}
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button className="flex-1 px-3 py-2 bg-[var(--brand)] text-white rounded-lg text-sm font-medium hover:bg-[var(--brand-hover)]">Book Appointment</button>
+                  <button className="flex-1 px-3 py-2 bg-surface text-foreground rounded-lg text-sm font-medium hover:bg-surface-alt border border-border">View Records</button>
+                </div>
+              </div>
+            )}
+
+            {/* Invoices Tab */}
+            {activeTab === 'invoices' && (
+              <InvoiceList
+                patientId={selected.id}
+                onViewInvoice={setSelectedInvoice}
+                onDownloadInvoice={(id) => showToast(`Invoice downloaded successfully`, 'success')}
+                onShareInvoice={(id) => showToast(`Invoice shared via email`, 'success')}
+              />
+            )}
+
+            {/* WhatsApp Tab */}
+            {activeTab === 'whatsapp' && (
+              <WhatsAppConversationHub
+                patientId={selected.id}
+                onSelectConversation={setSelectedConversation}
+              />
+            )}
           </div>
         )}
       </SlidePanel>
+
+      {/* Invoice Preview Modal */}
+      <Modal
+        open={!!selectedInvoice}
+        onClose={() => setSelectedInvoice(null)}
+        title=""
+        width="max-w-4xl"
+        className="max-h-screen overflow-y-auto"
+      >
+        {selectedInvoice && (
+          <InvoicePreview
+            invoiceId={selectedInvoice}
+            onClose={() => setSelectedInvoice(null)}
+            onDownload={() => showToast('Invoice downloaded', 'success')}
+            onShare={() => showToast('Invoice shared', 'success')}
+          />
+        )}
+      </Modal>
+
+      {/* WhatsApp Thread Modal */}
+      <Modal
+        open={!!selectedConversation}
+        onClose={() => setSelectedConversation(null)}
+        title=""
+        width="max-w-2xl"
+        className="h-[80vh]"
+      >
+        {selectedConversation && (
+          <WhatsAppThread
+            conversationId={selectedConversation}
+            onClose={() => setSelectedConversation(null)}
+          />
+        )}
+      </Modal>
     </div>
   );
 }

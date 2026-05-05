@@ -1,10 +1,16 @@
 import { UserCog, Users, Calendar, IndianRupee } from 'lucide-react';
+import { useState } from 'react';
 import { useStaff } from '../hooks/useStaff';
+import { useStaffDetail } from '../hooks/useStaffDetail';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorState from '../components/ui/ErrorState';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
 import Avatar from '../components/ui/Avatar';
+import SlidePanel from '../components/ui/SlidePanel';
+import DocumentVault from '../components/ui/DocumentVault';
+import PayrollHistory from '../components/ui/PayrollHistory';
+import PerformanceTimeline from '../components/ui/PerformanceTimeline';
 import { formatINR } from '../lib/format';
 
 const DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
@@ -18,7 +24,11 @@ const shiftStyle = (s) => {
 };
 
 export default function StaffCommand() {
+  const [selectedStaffId, setSelectedStaffId] = useState(null);
+  const [activeTab, setActiveTab] = useState('profile');
   const { staff, shifts, attendance, loading, error, refetch } = useStaff();
+  const { staff: staffDetail } = useStaffDetail(selectedStaffId);
+
   if (loading) return <LoadingSpinner/>;
   if (error) return <ErrorState message={error} onRetry={refetch}/>;
 
@@ -59,7 +69,11 @@ export default function StaffCommand() {
                 const a = attMap[p.id];
                 const pct = a ? Math.round((a.present / (a.present + a.absent + a.leave)) * 100) : 0;
                 return (
-                  <tr key={p.id} className={`hover:bg-surface-alt ${i % 2 ? 'bg-surface/40' : ''}`}>
+                  <tr
+                    key={p.id}
+                    onClick={() => setSelectedStaffId(p.id)}
+                    className={`cursor-pointer hover:bg-surface-alt transition-colors ${i % 2 ? 'bg-surface/40' : ''}`}
+                  >
                     <td className="px-4 py-3"><div className="flex items-center gap-3"><Avatar name={p.name} size={34}/><div className="font-medium">{p.name}</div></div></td>
                     <td className="px-4 py-3 text-muted-foreground">{p.role}</td>
                     <td className="px-4 py-3 font-mono text-xs">{p.phone}</td>
@@ -102,6 +116,136 @@ export default function StaffCommand() {
           </table>
         </div>
       </div>
+
+      {/* Staff Detail SlidePanel */}
+      <SlidePanel
+        open={!!selectedStaffId}
+        onClose={() => { setSelectedStaffId(null); setActiveTab('profile'); }}
+        title={staffDetail?.name || 'Staff Profile'}
+        width="max-w-2xl"
+      >
+        {staffDetail && (
+          <div className="space-y-5">
+            {/* Tabs */}
+            <div className="flex gap-1 border-b border-border overflow-x-auto">
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === 'profile'
+                    ? 'border-[var(--brand)] text-[var(--brand)]'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Profile
+              </button>
+              <button
+                onClick={() => setActiveTab('documents')}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === 'documents'
+                    ? 'border-[var(--brand)] text-[var(--brand)]'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Documents
+              </button>
+              <button
+                onClick={() => setActiveTab('payroll')}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === 'payroll'
+                    ? 'border-[var(--brand)] text-[var(--brand)]'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Payroll
+              </button>
+              <button
+                onClick={() => setActiveTab('performance')}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                  activeTab === 'performance'
+                    ? 'border-[var(--brand)] text-[var(--brand)]'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Performance
+              </button>
+            </div>
+
+            {/* Profile Tab */}
+            {activeTab === 'profile' && (
+              <div className="space-y-5">
+                <div className="flex items-center gap-4">
+                  <Avatar name={staffDetail.name} size={64} />
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground">{staffDetail.name}</h2>
+                    <p className="text-sm text-muted-foreground">{staffDetail.role}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{staffDetail.department}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-surface rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground mb-1">Email</p>
+                    <p className="font-medium text-sm text-foreground break-all">{staffDetail.email}</p>
+                  </div>
+                  <div className="bg-surface rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground mb-1">Phone</p>
+                    <p className="font-medium text-sm text-foreground">{staffDetail.phone}</p>
+                  </div>
+                  <div className="bg-surface rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground mb-1">License</p>
+                    <p className="font-medium text-sm text-foreground">{staffDetail.licenseNumber}</p>
+                  </div>
+                  <div className="bg-surface rounded-lg p-3">
+                    <p className="text-xs text-muted-foreground mb-1">Joined</p>
+                    <p className="font-medium text-sm text-foreground">{staffDetail.joiningDate}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">Bio</p>
+                  <p className="text-sm text-foreground">{staffDetail.bio}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">Specializations</p>
+                  <div className="flex flex-wrap gap-2">
+                    {staffDetail.specialization?.map(spec => (
+                      <Badge key={spec} variant="info">{spec}</Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button className="flex-1 px-3 py-2 bg-[var(--brand)] text-white rounded-lg text-sm font-medium hover:bg-[var(--brand-hover)]">Edit Profile</button>
+                  <button className="flex-1 px-3 py-2 bg-surface text-foreground rounded-lg text-sm font-medium hover:bg-surface-alt border border-border">Message</button>
+                </div>
+              </div>
+            )}
+
+            {/* Documents Tab */}
+            {activeTab === 'documents' && (
+              <DocumentVault
+                staffId={selectedStaffId}
+                onUpload={() => {}}
+              />
+            )}
+
+            {/* Payroll Tab */}
+            {activeTab === 'payroll' && (
+              <PayrollHistory
+                staffId={selectedStaffId}
+              />
+            )}
+
+            {/* Performance Tab */}
+            {activeTab === 'performance' && (
+              <PerformanceTimeline
+                staffId={selectedStaffId}
+              />
+            )}
+          </div>
+        )}
+      </SlidePanel>
     </div>
   );
 }
