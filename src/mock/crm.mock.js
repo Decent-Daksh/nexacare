@@ -1,0 +1,20 @@
+/* CRM shape: { campaigns[], recallQueue[], npsData[] } */
+export const mockCRM = () => ({
+  campaigns: [
+    { id: 'C-01', name: 'Diabetes Quarterly Recall', channel: 'WhatsApp', audience: 142, sent: 142, opened: 118, booked: 47, status: 'Active' },
+    { id: 'C-02', name: 'Annual Health Check-up',    channel: 'SMS',      audience: 380, sent: 380, opened: 210, booked: 62, status: 'Active' },
+    { id: 'C-03', name: 'Flu Vaccine Drive',         channel: 'WhatsApp', audience: 520, sent: 0,   opened: 0,   booked: 0,  status: 'Draft' },
+    { id: 'C-04', name: 'Paediatric Wellness',       channel: 'Email',    audience: 88,  sent: 88,  opened: 41,  booked: 19, status: 'Completed' },
+  ],
+  recallQueue: [
+    { patientId: 'P-1001', patientName: 'Rajesh Kumar',  reason: 'HbA1c overdue', dueIn: '3 days', priority: 'High' },
+    { patientId: 'P-1003', patientName: 'Mohammed Iqbal',reason: 'Cardiac review', dueIn: '7 days', priority: 'High' },
+    { patientId: 'P-1006', patientName: 'Lakshmi Iyer',  reason: 'Thyroid panel', dueIn: '12 days', priority: 'Medium' },
+    { patientId: 'P-1008', patientName: 'Fatima Sheikh', reason: 'Iron levels', dueIn: '20 days', priority: 'Low' },
+  ],
+  npsData: [
+    { rating: 'Promoters', value: 68, color: 'var(--success)' },
+    { rating: 'Passives',  value: 24, color: 'var(--warning)' },
+    { rating: 'Detractors',value: 8,  color: 'var(--danger)' },
+  ],
+});
