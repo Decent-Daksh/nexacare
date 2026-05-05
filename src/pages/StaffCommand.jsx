@@ -5,6 +5,7 @@ import ErrorState from '../components/ui/ErrorState';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
 import Avatar from '../components/ui/Avatar';
+import DailyAttendance from '../components/staff/DailyAttendance';
 import { formatINR } from '../lib/format';
 
 const DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
