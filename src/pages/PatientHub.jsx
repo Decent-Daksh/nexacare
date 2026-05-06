@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Added useEffect
 import { Search, Plus, Phone, Calendar, AlertTriangle, Sparkles } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router'; // Added for redirection
+import { useAuth } from '../lib/auth'; // Added for role check
 import { usePatients } from '../hooks/usePatients';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorState from '../components/ui/ErrorState';
@@ -10,11 +12,24 @@ import AIBadge from '../components/ui/AIBadge';
 import { useToast } from '../context/ToastContext';
 
 export default function PatientHub() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Role check: Redirect managers to unauthorized page
+  useEffect(() => {
+    if (user && user.role === 'manager') {
+      navigate({ to: '/unauthorized' });
+    }
+  }, [user, navigate]);
+
   const [search, setSearch] = useState('');
   const [risk, setRisk] = useState('');
   const [selected, setSelected] = useState(null);
   const { data, loading, error, refetch, createPatient } = usePatients({ search, riskLevel: risk });
   const { showToast } = useToast();
+
+  // If role is manager, return null to prevent content flicker during redirect
+  if (!user || user.role === 'manager') return null;
 
   const addDemo = async () => {
     await createPatient({

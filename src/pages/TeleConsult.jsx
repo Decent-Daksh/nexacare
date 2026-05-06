@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Added useEffect
 import { Video, Mic, MicOff, VideoOff, PhoneOff, Sparkles, Users } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router'; // Added for redirection[cite: 1]
+import { useAuth } from '../lib/auth'; // Added for role check[cite: 1]
 import { useTeleConsult } from '../hooks/useTeleConsult';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorState from '../components/ui/ErrorState';
@@ -8,12 +10,23 @@ import Avatar from '../components/ui/Avatar';
 import AIBadge from '../components/ui/AIBadge';
 
 export default function TeleConsult() {
+  const { user } = useAuth(); //[cite: 1]
+  const navigate = useNavigate(); //[cite: 1]
+
+  // Role check: Redirect managers to unauthorized page immediately[cite: 1]
+  useEffect(() => {
+    if (user && user.role === 'manager') {
+      navigate({ to: '/unauthorized' });
+    }
+  }, [user, navigate]);
+
   const { sessions, loading, error, refetch, endSession } = useTeleConsult();
   const [muted, setMuted] = useState(false);
   const [camOff, setCamOff] = useState(false);
   const live = sessions.find(s => s.status === 'Live');
 
-  if (loading) return <LoadingSpinner/>;
+  // Prevent rendering content for managers before the redirect occurs[cite: 1]
+  if (loading || (user && user.role === 'manager')) return <LoadingSpinner/>;
   if (error) return <ErrorState message={error} onRetry={refetch}/>;
 
   return (

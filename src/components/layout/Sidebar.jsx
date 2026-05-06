@@ -3,6 +3,8 @@ import {
   Megaphone, BarChart3, Video, UserCog, Settings, Activity, X
 } from 'lucide-react';
 import AIBadge from '../ui/AIBadge';
+import { RoleGuard } from '../RoleGuard';
+import { useAuth } from '../../context/AuthContext'; // Import useAuth[cite: 1]
 
 const NAV = [
   { id: 'dashboard',    label: 'Dashboard',     icon: LayoutDashboard },
@@ -19,6 +21,14 @@ const NAV = [
 ];
 
 export default function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile }) {
+  const { user } = useAuth(); // Get user from auth context[cite: 1]
+  const role = user?.role;
+
+  // Filter the NAV array based on role[cite: 1]
+  const filteredNav = role === 'manager' 
+    ? NAV.filter(item => !['patients', 'tele', 'revenue', 'copilot', 'pharmiq'].includes(item.id))
+    : NAV;
+
   return (
     <>
       {mobileOpen && <div onClick={onCloseMobile} className="fixed inset-0 bg-black/40 z-40 md:hidden" />}
@@ -36,7 +46,7 @@ export default function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile 
           <button onClick={onCloseMobile} className="md:hidden p-1 rounded hover:bg-surface-alt"><X size={18} /></button>
         </div>
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-          {NAV.map(item => {
+          {filteredNav.map(item => { // Render filteredNav instead of original NAV[cite: 1]
             const Icon = item.icon;
             const isActive = active === item.id;
             return (

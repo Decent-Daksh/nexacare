@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LayoutGrid, List, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAppointments } from '../hooks/useAppointments';
+import { useAuth } from '../lib/auth'; // Added for role check[cite: 1]
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorState from '../components/ui/ErrorState';
 import Badge from '../components/ui/Badge';
@@ -19,6 +20,8 @@ const DAYS = [
 
 export default function Appointments() {
   const [view, setView] = useState('week');
+  const { user } = useAuth(); // Extract user to get role[cite: 1]
+  const role = user?.role;
   const { data, loading, error, refetch, createAppointment } = useAppointments();
   const { showToast } = useToast();
 
@@ -76,7 +79,10 @@ export default function Appointments() {
                             appt.noShowRisk === 'High' ? 'bg-[color-mix(in_oklab,var(--danger)_12%,white)] border-l-2 border-l-[var(--danger)]'
                             : 'bg-secondary border-l-2 border-l-[var(--brand)]'
                           }`}>
-                            <div className="font-semibold truncate">{appt.patientName}</div>
+                            {/* Change 1: Mask name in Week View[cite: 1] */}
+                            <div className="font-semibold truncate">
+                              {role === 'manager' ? '——' : appt.patientName}
+                            </div>
                             <div className="text-muted-foreground truncate">{appt.type}</div>
                             {appt.noShowRisk === 'High' && <div className="mt-1"><Badge variant="danger">{appt.noShowRisk} risk</Badge></div>}
                           </div>
@@ -106,7 +112,13 @@ export default function Appointments() {
               {data.map((a, i) => (
                 <tr key={a.id} className={`hover:bg-surface-alt ${i % 2 ? 'bg-surface/40' : ''}`}>
                   <td className="px-4 py-3 font-mono text-xs">{a.date} {a.time}</td>
-                  <td className="px-4 py-3"><div className="flex items-center gap-2"><Avatar name={a.patientName} size={28}/>{a.patientName}</div></td>
+                  {/* Change 2: Hide Avatar and mask name in List View[cite: 1] */}
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      {role !== 'manager' && <Avatar name={a.patientName} size={28}/>}
+                      {role === 'manager' ? '——' : a.patientName}
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{a.doctor}</td>
                   <td className="px-4 py-3">{a.type}</td>
                   <td className="px-4 py-3"><Badge variant={a.status === 'Confirmed' ? 'success' : a.status === 'In-Progress' ? 'info' : 'warning'}>{a.status}</Badge></td>

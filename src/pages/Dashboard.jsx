@@ -7,11 +7,12 @@ import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorState from '../components/ui/ErrorState';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useAppointments } from '../hooks/useAppointments';
+import { useAuth } from '../lib/auth'; // Added for role access[cite: 1]
 import { formatINR } from '../lib/format';
 import Avatar from '../components/ui/Avatar';
 
 const AUTOMATIONS = [
-  { name: 'No-show Predictor',      icon: ClockAlert,    desc: 'ML scores upcoming appointments' },
+  { name: 'No-show Predictor',       icon: ClockAlert,    desc: 'ML scores upcoming appointments' },
   { name: 'WhatsApp Recall',        icon: MessageSquare, desc: 'Auto-reach overdue patients' },
   { name: 'Smart Reorder',          icon: Pill,          desc: 'Reorders low-stock drugs' },
   { name: 'Insurance Claim Filer',  icon: FileText,      desc: 'Auto-files cashless claims' },
@@ -26,6 +27,7 @@ const AUTOMATIONS = [
 ];
 
 export default function Dashboard() {
+  const { role } = useAuth(); // Destructure role for access checks[cite: 1]
   const { kpis, charts, loading, error, refetch } = useAnalytics();
   const { data: appts } = useAppointments({ date: '2026-05-04' });
 
@@ -45,10 +47,10 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Users}        label="Active Patients"   value={kpis.totalPatients.toLocaleString('en-IN')} delta="+4.2% MoM" accent="brand" />
+        <StatCard icon={Users}         label="Active Patients"   value={kpis.totalPatients.toLocaleString('en-IN')} delta="+4.2% MoM" accent="brand" />
         <StatCard icon={CalendarDays} label="Today's Bookings" value={appts.length} delta="+2 vs yest." accent="info" sublabel="6 confirmed, 1 walk-in" />
-        <StatCard icon={IndianRupee}  label="MTD Revenue"       value={formatINR(kpis.monthlyRevenue)} delta="+12.4% MoM" accent="brand" />
-        <StatCard icon={Activity}     label="Avg Wait Time"     value={`${kpis.avgWaitMin} min`} delta="-3 min vs last wk" accent="ai" />
+        <StatCard icon={IndianRupee}   label="MTD Revenue"       value={formatINR(kpis.monthlyRevenue)} delta="+12.4% MoM" accent="brand" />
+        <StatCard icon={Activity}      label="Avg Wait Time"     value={`${kpis.avgWaitMin} min`} delta="-3 min vs last wk" accent="ai" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -88,7 +90,10 @@ export default function Dashboard() {
             <li className="flex gap-3"><Sparkles size={14} className="text-[var(--ai)] mt-1 shrink-0" /><span><strong>3 patients</strong> have ≥70% no-show risk today — auto-reminders queued.</span></li>
             <li className="flex gap-3"><Sparkles size={14} className="text-[var(--ai)] mt-1 shrink-0" /><span>Insulin Glargine stock will deplete in <strong>4 days</strong>. Reorder PO-502 ready.</span></li>
             <li className="flex gap-3"><Sparkles size={14} className="text-[var(--ai)] mt-1 shrink-0" /><span>Diabetes recall cohort: <strong>47 booked</strong> — conversion 33%.</span></li>
-            <li className="flex gap-3"><Sparkles size={14} className="text-[var(--ai)] mt-1 shrink-0" /><span>HbA1c trend warning for <strong>P-1001 Rajesh Kumar</strong>.</span></li>
+            {/* Condition 2: Hide specific patient warning from managers[cite: 1] */}
+            {(role === 'admin' || role === 'doctor') && (
+              <li className="flex gap-3"><Sparkles size={14} className="text-[var(--ai)] mt-1 shrink-0" /><span>HbA1c trend warning for <strong>P-1001 Rajesh Kumar</strong>.</span></li>
+            )}
           </ul>
         </div>
       </div>
@@ -106,9 +111,11 @@ export default function Dashboard() {
                   <div className="text-xs text-muted-foreground">{a.time.split(':')[0]}h</div>
                   <div className="text-xs font-mono">{a.time.split(':')[1]}</div>
                 </div>
-                <Avatar name={a.patientName} size={34} />
+                {/* Condition 1a: Hide Avatar for managers[cite: 1] */}
+                {role !== 'manager' && <Avatar name={a.patientName} size={34} />}
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{a.patientName}</div>
+                  {/* Condition 1b: Mask name for managers[cite: 1] */}
+                  <div className="text-sm font-medium truncate">{role === 'manager' ? '——' : a.patientName}</div>
                   <div className="text-xs text-muted-foreground truncate">{a.type} • {a.doctor}</div>
                 </div>
                 <Badge variant={a.status === 'In-Progress' ? 'info' : a.status === 'Waiting' ? 'warning' : 'success'}>{a.status}</Badge>

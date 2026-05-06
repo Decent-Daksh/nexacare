@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function Topbar({ onOpenMobile }) {
   const { user, clinicInfo } = useAuth();
+  const { role, switchRole } = useAuth();
   return (
     <header className="sticky top-0 z-30 h-[60px] bg-card/80 backdrop-blur border-b border-border flex items-center px-4 md:px-6 gap-4">
       <button onClick={onOpenMobile} className="md:hidden p-1.5 rounded-md hover:bg-surface-alt"><Menu size={20} /></button>
@@ -29,6 +30,30 @@ export default function Topbar({ onOpenMobile }) {
           </div>
         </div>
       </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+  <span style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>
+    Role:
+  </span>
+  <select
+    value={role}
+    onChange={(e) => switchRole(e.target.value)}
+    style={{
+      fontSize: 12,
+      padding: '4px 8px',
+      borderRadius: 8,
+      border: '1px solid var(--border)',
+      background: 'var(--card)',
+      color: 'var(--foreground)',
+      cursor: 'pointer',
+    }}
+  >
+        <option value="admin">Admin</option>
+        <option value="doctor">Doctor</option>
+        <option value="manager">Manager</option>
+      </select>
+    </div>
     </header>
+
+    
   );
 }

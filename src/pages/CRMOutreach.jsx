@@ -1,6 +1,7 @@
 import { Megaphone, Send, Users, MessageCircle, Mail, Clock } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useCRM } from '../hooks/useCRM';
+import { useAuth } from '../lib/auth'; // Added for role check[cite: 1]
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorState from '../components/ui/ErrorState';
 import StatCard from '../components/ui/StatCard';
@@ -10,7 +11,9 @@ import Avatar from '../components/ui/Avatar';
 const channelIcon = { WhatsApp: MessageCircle, SMS: Send, Email: Mail };
 
 export default function CRMOutreach() {
+  const { role } = useAuth(); // Access the current user role[cite: 1]
   const { campaigns, recallQueue, npsData, loading, error, refetch } = useCRM();
+  
   if (loading) return <LoadingSpinner/>;
   if (error) return <ErrorState message={error} onRetry={refetch}/>;
 
@@ -72,9 +75,13 @@ export default function CRMOutreach() {
           <div className="divide-y divide-border">
             {recallQueue.map(r => (
               <div key={r.patientId} className="p-4 flex items-center gap-3">
-                <Avatar name={r.patientName} size={36}/>
+                {/* Condition: Hide Avatar when role is manager[cite: 1] */}
+                {role !== 'manager' && <Avatar name={r.patientName} size={36}/>}
                 <div className="flex-1">
-                  <div className="font-medium text-sm">{r.patientName}</div>
+                  {/* Condition: Mask patient name when role is manager[cite: 1] */}
+                  <div className="font-medium text-sm">
+                    {role === 'manager' ? '——' : r.patientName}
+                  </div>
                   <div className="text-xs text-muted-foreground">{r.reason} • due in {r.dueIn}</div>
                 </div>
                 <Badge variant={r.priority === 'High' ? 'danger' : r.priority === 'Medium' ? 'warning' : 'info'}>{r.priority}</Badge>

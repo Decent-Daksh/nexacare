@@ -1,67 +1,91 @@
-import { createRouter, useRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
+import { createRouter, createRoute } from '@tanstack/react-router';
+// Import 'Route' from your root file and alias it to 'rootRoute'
+import { Route as rootRoute } from './routes/__root';
 
-function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  const router = useRouter();
+// Import your page components
+import Dashboard from './pages/Dashboard';
+import PatientHub from './pages/PatientHub';
+import StaffCommand from './pages/StaffCommand';
+import UnauthorizedPage from './pages/unauthorized';
+import RoleManager from './pages/admin/RoleManager';
+import LoginPage from './pages/Login';
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 text-destructive"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-            />
-          </svg>
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Something went wrong</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          An unexpected error occurred. Please try again.
-        </p>
-        {import.meta.env.DEV && error.message && (
-          <pre className="mt-4 max-h-40 overflow-auto rounded-md bg-muted p-3 text-left font-mono text-xs text-destructive">
-            {error.message}
-          </pre>
-        )}
-        <div className="mt-6 flex items-center justify-center gap-3">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
-      </div>
-    </div>
-  );
+// Import your RBAC guard
+import { ProtectedRoute } from './components/ProtectedRoute';
+
+// 1. Define Public Routes
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  component: LoginPage,
+});
+
+const unauthorizedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/unauthorized',
+  component: UnauthorizedPage,
+});
+
+// 2. Define Protected Dashboard Route (Accessible to all authenticated users)
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: Dashboard,
+});
+
+// 3. Define Clinical Routes (Restricted to Admin and Doctor)
+const patientHubRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/patients',
+  component: () => (
+    <ProtectedRoute allowedRoles={['admin', 'doctor']}>
+      <PatientHub />
+    </ProtectedRoute>
+  ),
+});
+
+// 4. Define Managerial Routes (Accessible to Admin and Manager)
+const staffCommandRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/staff',
+  component: () => (
+    <ProtectedRoute allowedRoles={['admin', 'manager']}>
+      <StaffCommand />
+    </ProtectedRoute>
+  ),
+});
+
+// 5. Define Admin-Only Routes
+const roleManagerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/roles',
+  component: () => (
+    <ProtectedRoute allowedRoles={['admin']}>
+      <RoleManager />
+    </ProtectedRoute>
+  ),
+});
+
+// 6. Build the Route Tree 
+// This variable MUST be declared before the 'router' uses it
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  loginRoute,
+  unauthorizedRoute,
+  patientHubRoute,
+  staffCommandRoute,
+  roleManagerRoute,
+]);
+
+// 7. Create and Export the Router
+export const router = createRouter({ 
+  routeTree,
+  defaultPreload: 'intent',
+});
+
+// 8. Register the router for maximum Type-Safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
 }
-
-export const getRouter = () => {
-  const router = createRouter({
-    routeTree,
-    context: {},
-    scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
-    defaultErrorComponent: DefaultErrorComponent,
-  });
-
-  return router;
-};
