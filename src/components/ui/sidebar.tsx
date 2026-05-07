@@ -25,7 +25,11 @@ const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
+<<<<<<< HEAD
 interface SidebarContextProps {
+=======
+type SidebarContextProps = {
+>>>>>>> main
   state: "expanded" | "collapsed";
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -33,7 +37,11 @@ interface SidebarContextProps {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> main
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
 
@@ -83,19 +91,27 @@ const SidebarProvider = React.forwardRef<
         }
 
         // This sets the cookie to keep the sidebar state.
+<<<<<<< HEAD
         const cookieValue = openState ? "true" : "false";
         document.cookie = `${SIDEBAR_COOKIE_NAME}=${cookieValue}; path=/; max-age=${String(SIDEBAR_COOKIE_MAX_AGE)}`;
+=======
+        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+>>>>>>> main
       },
       [setOpenProp, open],
     );
 
     // Helper to toggle the sidebar.
     const toggleSidebar = React.useCallback(() => {
+<<<<<<< HEAD
       if (isMobile) {
         setOpenMobile((open) => !open);
       } else {
         setOpen((open) => !open);
       }
+=======
+      return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
+>>>>>>> main
     }, [isMobile, setOpen, setOpenMobile]);
 
     // Adds a keyboard shortcut to toggle the sidebar.
@@ -108,9 +124,13 @@ const SidebarProvider = React.forwardRef<
       };
 
       window.addEventListener("keydown", handleKeyDown);
+<<<<<<< HEAD
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
       };
+=======
+      return () => window.removeEventListener("keydown", handleKeyDown);
+>>>>>>> main
     }, [toggleSidebar]);
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
@@ -647,7 +667,11 @@ const SidebarMenuSkeleton = React.forwardRef<
 >(({ className, showIcon = false, ...props }, ref) => {
   // Random width between 50 to 90%.
   const width = React.useMemo(() => {
+<<<<<<< HEAD
     return `${String(Math.floor(Math.random() * 40) + 50)}%`;
+=======
+    return `${Math.floor(Math.random() * 40) + 50}%`;
+>>>>>>> main
   }, []);
 
   return (

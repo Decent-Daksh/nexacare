@@ -1,6 +1,7 @@
 /* Revenue shape: { invoices[], claims[], forecast[] } */
 export const mockRevenue = () => ({
   invoices: [
+<<<<<<< HEAD
     {
       id: "INV-9001",
       patientName: "Rajesh Kumar",
@@ -85,5 +86,28 @@ export const mockRevenue = () => ({
     { month: "Apr", revenue: 564000, forecast: 555000 },
     { month: "May", revenue: 0, forecast: 590000 },
     { month: "Jun", revenue: 0, forecast: 612000 },
+=======
+    { id: 'INV-9001', patientName: 'Rajesh Kumar',  date: '2026-05-03', amount: 4500,  status: 'Paid',    method: 'UPI' },
+    { id: 'INV-9002', patientName: 'Anita Verma',   date: '2026-05-03', amount: 1200,  status: 'Paid',    method: 'Cash' },
+    { id: 'INV-9003', patientName: 'Mohammed Iqbal',date: '2026-05-02', amount: 8750,  status: 'Pending', method: 'Insurance' },
+    { id: 'INV-9004', patientName: 'Sneha Pillai',  date: '2026-05-02', amount: 2300,  status: 'Paid',    method: 'Card' },
+    { id: 'INV-9005', patientName: 'Lakshmi Iyer',  date: '2026-05-01', amount: 5600,  status: 'Overdue', method: 'Insurance' },
+    { id: 'INV-9006', patientName: 'Vikram Singh',  date: '2026-05-01', amount: 1800,  status: 'Paid',    method: 'UPI' },
+  ],
+  claims: [
+    { id: 'CLM-301', patientName: 'Mohammed Iqbal', insurer: 'Star Health', amount: 8750, submittedOn: '2026-05-02', status: 'Under Review' },
+    { id: 'CLM-302', patientName: 'Lakshmi Iyer',   insurer: 'HDFC Ergo',   amount: 5600, submittedOn: '2026-04-28', status: 'Approved' },
+    { id: 'CLM-303', patientName: 'Rajesh Kumar',   insurer: 'ICICI Lombard',amount: 12300,submittedOn: '2026-04-20', status: 'Rejected' },
+  ],
+  forecast: [
+    { month: 'Nov', revenue: 412000, forecast: 415000 },
+    { month: 'Dec', revenue: 458000, forecast: 460000 },
+    { month: 'Jan', revenue: 502000, forecast: 495000 },
+    { month: 'Feb', revenue: 478000, forecast: 488000 },
+    { month: 'Mar', revenue: 521000, forecast: 525000 },
+    { month: 'Apr', revenue: 564000, forecast: 555000 },
+    { month: 'May', revenue: 0,      forecast: 590000 },
+    { month: 'Jun', revenue: 0,      forecast: 612000 },
+>>>>>>> main
   ],
 });

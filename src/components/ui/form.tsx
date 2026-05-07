@@ -3,11 +3,19 @@ import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import {
   Controller,
+<<<<<<< HEAD
   type ControllerProps,
   type FieldPath,
   type FieldValues,
   FormProvider,
   useFormContext,
+=======
+  FormProvider,
+  useFormContext,
+  type ControllerProps,
+  type FieldPath,
+  type FieldValues,
+>>>>>>> main
 } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
@@ -15,12 +23,21 @@ import { Label } from "@/components/ui/label";
 
 const Form = FormProvider;
 
+<<<<<<< HEAD
 interface FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > {
   name: TName;
 }
+=======
+type FormFieldContextValue<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = {
+  name: TName;
+};
+>>>>>>> main
 
 const FormFieldContext = React.createContext<FormFieldContextValue | null>(null);
 
@@ -64,9 +81,15 @@ const useFormField = () => {
   };
 };
 
+<<<<<<< HEAD
 interface FormItemContextValue {
   id: string;
 }
+=======
+type FormItemContextValue = {
+  id: string;
+};
+>>>>>>> main
 
 const FormItemContext = React.createContext<FormItemContextValue | null>(null);
 
@@ -110,8 +133,13 @@ const FormControl = React.forwardRef<
     <Slot
       ref={ref}
       id={formItemId}
+<<<<<<< HEAD
       aria-describedby={!error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`}
       aria-invalid={Boolean(error)}
+=======
+      aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
+      aria-invalid={!!error}
+>>>>>>> main
       {...props}
     />
   );
@@ -140,7 +168,11 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
+<<<<<<< HEAD
   const body = error ? (error.message ?? "") : children;
+=======
+  const body = error ? String(error?.message ?? "") : children;
+>>>>>>> main
 
   if (!body) {
     return null;

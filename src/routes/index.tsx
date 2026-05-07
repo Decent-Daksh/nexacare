@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+<<<<<<< HEAD
 import App from "../App";
 
 export const Route = createFileRoute("/")({
@@ -14,3 +15,15 @@ export const Route = createFileRoute("/")({
     ],
   }),
 });
+=======
+
+import App from "../App.jsx";
+
+export const Route = createFileRoute("/")({
+  component: Index,
+});
+
+function Index() {
+  return <App />;
+}
+>>>>>>> main

@@ -10,12 +10,20 @@ type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
+<<<<<<< HEAD
 interface CarouselProps {
+=======
+type CarouselProps = {
+>>>>>>> main
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> main
 
 type CarouselContextProps = {
   carouselRef: ReturnType<typeof useEmblaCarousel>[0];
@@ -100,7 +108,11 @@ const Carousel = React.forwardRef<
     api.on("select", onSelect);
 
     return () => {
+<<<<<<< HEAD
       api.off("select", onSelect);
+=======
+      api?.off("select", onSelect);
+>>>>>>> main
     };
   }, [api, onSelect]);
 
@@ -110,7 +122,11 @@ const Carousel = React.forwardRef<
         carouselRef,
         api: api,
         opts,
+<<<<<<< HEAD
         orientation,
+=======
+        orientation: orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+>>>>>>> main
         scrollPrev,
         scrollNext,
         canScrollPrev,

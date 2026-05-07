@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 @import "tailwindcss" source(none);
 @import "tw-animate-css";
 
 @source "../src";
+=======
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap');
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+>>>>>>> main
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -44,9 +52,15 @@
   --color-warning: var(--warning);
   --color-danger: var(--danger);
 
+<<<<<<< HEAD
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+=======
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+>>>>>>> main
 }
 
 :root {
@@ -80,7 +94,11 @@
   --brand: oklch(0.71 0.13 162);
   --brand-hover: oklch(0.65 0.14 162);
   --brand-active: oklch(0.56 0.13 162);
+<<<<<<< HEAD
   --ai: oklch(0.74 0.1 200);
+=======
+  --ai: oklch(0.74 0.10 200);
+>>>>>>> main
   --ai-soft: oklch(0.94 0.04 200);
   --info: oklch(0.63 0.13 245);
   --info-soft: oklch(0.95 0.03 245);
@@ -89,7 +107,11 @@
   --danger: oklch(0.63 0.22 27);
 
   --chart-1: oklch(0.71 0.13 162);
+<<<<<<< HEAD
   --chart-2: oklch(0.74 0.1 200);
+=======
+  --chart-2: oklch(0.74 0.10 200);
+>>>>>>> main
   --chart-3: oklch(0.63 0.13 245);
   --chart-4: oklch(0.78 0.15 75);
   --chart-5: oklch(0.63 0.22 27);
@@ -114,6 +136,7 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+<<<<<<< HEAD
   h1,
   h2,
   h3,
@@ -126,12 +149,20 @@
   .font-mono,
   code,
   kbd {
+=======
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  .font-mono, code, kbd {
+>>>>>>> main
     font-family: var(--font-mono);
   }
 }
 
 @layer utilities {
   .ai-glow {
+<<<<<<< HEAD
     box-shadow:
       0 0 0 1px color-mix(in oklab, var(--ai) 35%, transparent),
       0 8px 24px -12px color-mix(in oklab, var(--ai) 50%, transparent);
@@ -140,27 +171,43 @@
     transition:
       transform 200ms ease,
       box-shadow 200ms ease;
+=======
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--ai) 35%, transparent),
+                0 8px 24px -12px color-mix(in oklab, var(--ai) 50%, transparent);
+  }
+  .card-lift {
+    transition: transform 200ms ease, box-shadow 200ms ease;
+>>>>>>> main
   }
   .card-lift:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px -12px color-mix(in oklab, var(--brand) 25%, transparent);
   }
   .shimmer {
+<<<<<<< HEAD
     background: linear-gradient(
       90deg,
       var(--surface-alt) 25%,
       var(--surface) 50%,
       var(--surface-alt) 75%
     );
+=======
+    background: linear-gradient(90deg, var(--surface-alt) 25%, var(--surface) 50%, var(--surface-alt) 75%);
+>>>>>>> main
     background-size: 200% 100%;
     animation: shimmer 1.4s infinite;
   }
   @keyframes shimmer {
+<<<<<<< HEAD
     0% {
       background-position: 200% 0;
     }
     100% {
       background-position: -200% 0;
     }
+=======
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+>>>>>>> main
   }
 }
