@@ -1,11 +1,9 @@
-import { Award, TrendingUp, BookOpen, Star } from 'lucide-react';
-import { usePerformanceTimeline } from '../../hooks/useStaffDetail';
-import LoadingSpinner from './LoadingSpinner';
-import ErrorState from './ErrorState';
+import { Award, TrendingUp, BookOpen, Star } from "lucide-react";
+import { usePerformanceTimeline } from "../../hooks/useStaffDetail";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorState from "./ErrorState";
 
-export default function PerformanceTimeline({
-  staffId,
-}) {
+export default function PerformanceTimeline({ staffId }) {
   const { timeline, loading, error, refetch } = usePerformanceTimeline(staffId);
 
   if (loading) return <LoadingSpinner label="Loading performance data..." />;
@@ -13,11 +11,11 @@ export default function PerformanceTimeline({
 
   const getTypeIcon = (type) => {
     switch (type) {
-      case 'performance_review':
+      case "performance_review":
         return <TrendingUp size={18} className="text-[var(--ai)]" />;
-      case 'achievement':
+      case "achievement":
         return <Award size={18} className="text-[var(--success)]" />;
-      case 'training':
+      case "training":
         return <BookOpen size={18} className="text-[var(--info)]" />;
       default:
         return <Star size={18} className="text-[var(--brand)]" />;
@@ -25,10 +23,10 @@ export default function PerformanceTimeline({
   };
 
   const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(dateStr).toLocaleDateString("en-IN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -48,18 +46,14 @@ export default function PerformanceTimeline({
                 <div className="w-10 h-10 rounded-full bg-surface border-2 border-[var(--brand)] flex items-center justify-center flex-shrink-0">
                   {getTypeIcon(event.type)}
                 </div>
-                {idx < timeline.length - 1 && (
-                  <div className="w-0.5 h-12 bg-border my-2" />
-                )}
+                {idx < timeline.length - 1 && <div className="w-0.5 h-12 bg-border my-2" />}
               </div>
 
               {/* Content */}
               <div className="flex-1 pb-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="font-semibold text-sm text-foreground">
-                      {event.title}
-                    </p>
+                    <p className="font-semibold text-sm text-foreground">{event.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
                       {formatDate(event.date)} • {event.reviewer}
                     </p>

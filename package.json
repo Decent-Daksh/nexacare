@@ -8,8 +8,16 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
+    "lint:staged": "lint-staged",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit",
+    "unused:check": "knip --production",
+    "unused:fix": "knip --production --fix",
+    "dead-code:check": "ts-prune",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
@@ -80,7 +88,11 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
+    "husky": "^9.1.7",
+    "knip": "^5.88.1",
+    "lint-staged": "^15.5.2",
     "prettier": "^3.7.3",
+    "ts-prune": "^0.10.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1"

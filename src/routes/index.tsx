@@ -6,7 +6,11 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "NexaCare Care+ — AI Clinic Operating System" },
-      { name: "description", content: "AI-powered clinic operating system for Indian private clinics — patients, appointments, pharmacy, revenue, telehealth in one place." },
+      {
+        name: "description",
+        content:
+          "AI-powered clinic operating system for Indian private clinics — patients, appointments, pharmacy, revenue, telehealth in one place.",
+      },
     ],
   }),
 });

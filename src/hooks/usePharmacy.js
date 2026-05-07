@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { pharmacyService } from '../services/pharmacy.service';
+import { useState, useEffect, useCallback } from "react";
+import { pharmacyService } from "../services/pharmacy.service";
 
 export function usePharmacy() {
   const [stock, setStock] = useState([]);
@@ -9,14 +9,23 @@ export function usePharmacy() {
   const [error, setError] = useState(null);
 
   const fetch = useCallback(async () => {
-    setLoading(true); setError(null);
+    setLoading(true);
+    setError(null);
     try {
       const r = await pharmacyService.getAll();
-      setStock(r.stock); setAlerts(r.alerts); setReorderQueue(r.reorderQueue);
-    } catch (e) { setError(e.message); } finally { setLoading(false); }
+      setStock(r.stock);
+      setAlerts(r.alerts);
+      setReorderQueue(r.reorderQueue);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   const dispense = async (p) => pharmacyService.dispense(p);
 

@@ -1,11 +1,11 @@
-import { MessageCircle, Plus } from 'lucide-react';
+import { MessageCircle, Plus } from "lucide-react";
 
 export default function QuickWhatsAppActionBar({
   onSendPrescription,
   onSendLabReport,
   onSendMedicalCertificate,
   onSendPharmacyConfirmation,
-  className = '',
+  className = "",
 }) {
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { billingService } from '../services/billing.service';
+import { useState, useEffect, useCallback } from "react";
+import { billingService } from "../services/billing.service";
 
 export function usePatientInvoices(patientId, filters = {}) {
   const [invoices, setInvoices] = useState([]);
@@ -21,7 +21,7 @@ export function usePatientInvoices(patientId, filters = {}) {
       const data = await billingService.getPatientInvoices(patientId, filters);
       setInvoices(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch invoices');
+      setError(err.message || "Failed to fetch invoices");
       setInvoices([]);
     } finally {
       setLoading(false);
@@ -37,7 +37,7 @@ export function usePatientInvoices(patientId, filters = {}) {
       const result = await billingService.downloadInvoice(invoiceId);
       // Trigger browser download
       if (result.url) {
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = result.url;
         link.download = result.fileName || `invoice-${invoiceId}.pdf`;
         link.click();

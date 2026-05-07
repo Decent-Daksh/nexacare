@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { revenueService } from '../services/revenue.service';
+import { useState, useEffect, useCallback } from "react";
+import { revenueService } from "../services/revenue.service";
 
 export function useRevenue() {
   const [invoices, setInvoices] = useState([]);
@@ -9,17 +9,26 @@ export function useRevenue() {
   const [error, setError] = useState(null);
 
   const fetch = useCallback(async () => {
-    setLoading(true); setError(null);
+    setLoading(true);
+    setError(null);
     try {
       const r = await revenueService.getAll();
-      setInvoices(r.invoices); setClaims(r.claims); setForecast(r.forecast);
-    } catch (e) { setError(e.message); } finally { setLoading(false); }
+      setInvoices(r.invoices);
+      setClaims(r.claims);
+      setForecast(r.forecast);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   const createInvoice = async (p) => {
     const inv = await revenueService.createInvoice(p);
-    setInvoices(prev => [inv, ...prev]);
+    setInvoices((prev) => [inv, ...prev]);
     return inv;
   };
 

@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Search, Filter } from 'lucide-react';
-import { usePatientInvoices } from '../../hooks/usePatientInvoices';
-import InvoiceCard from './InvoiceCard';
-import LoadingSpinner from './LoadingSpinner';
-import ErrorState from './ErrorState';
+import { useState } from "react";
+import { Search, Filter } from "lucide-react";
+import { usePatientInvoices } from "../../hooks/usePatientInvoices";
+import InvoiceCard from "./InvoiceCard";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorState from "./ErrorState";
 
 export default function InvoiceList({
   patientId,
@@ -11,8 +11,8 @@ export default function InvoiceList({
   onDownloadInvoice,
   onShareInvoice,
 }) {
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const filters = {
@@ -20,8 +20,10 @@ export default function InvoiceList({
     search: search || undefined,
   };
 
-  const { invoices, loading, error, refetch, downloadInvoice, shareInvoice } =
-    usePatientInvoices(patientId, filters);
+  const { invoices, loading, error, refetch, downloadInvoice, shareInvoice } = usePatientInvoices(
+    patientId,
+    filters,
+  );
 
   const handleDownload = async (invoiceId) => {
     setIsLoading(true);
@@ -29,7 +31,7 @@ export default function InvoiceList({
       await downloadInvoice(invoiceId);
       onDownloadInvoice?.(invoiceId);
     } catch (err) {
-      console.error('Download failed:', err);
+      console.error("Download failed:", err);
     } finally {
       setIsLoading(false);
     }
@@ -38,10 +40,10 @@ export default function InvoiceList({
   const handleShare = async (invoiceId) => {
     setIsLoading(true);
     try {
-      await shareInvoice(invoiceId, 'email');
+      await shareInvoice(invoiceId, "email");
       onShareInvoice?.(invoiceId);
     } catch (err) {
-      console.error('Share failed:', err);
+      console.error("Share failed:", err);
     } finally {
       setIsLoading(false);
     }
@@ -57,8 +59,8 @@ export default function InvoiceList({
 
   const stats = {
     total: invoices.length,
-    paid: invoices.filter(i => i.status === 'paid').length,
-    pending: invoices.filter(i => i.status === 'pending').length,
+    paid: invoices.filter((i) => i.status === "paid").length,
+    pending: invoices.filter((i) => i.status === "pending").length,
   };
 
   return (
@@ -83,7 +85,10 @@ export default function InvoiceList({
       <div className="flex gap-3 items-center flex-wrap">
         <div className="flex-1 min-w-xs">
           <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Search
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
             <input
               type="text"
               placeholder="Search invoice number..."
@@ -111,9 +116,7 @@ export default function InvoiceList({
         <div className="text-center py-12">
           <p className="text-muted-foreground mb-2">No invoices found</p>
           <p className="text-xs text-muted-foreground">
-            {search || statusFilter
-              ? 'Try adjusting your filters'
-              : 'Invoices will appear here'}
+            {search || statusFilter ? "Try adjusting your filters" : "Invoices will appear here"}
           </p>
         </div>
       ) : (

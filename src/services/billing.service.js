@@ -1,8 +1,8 @@
-import { USE_MOCK } from '../config/env';
-import apiClient from '../lib/apiClient';
-import { generateMockInvoices, generateMockInvoiceDetail } from '../mock/invoices.mock';
+import { USE_MOCK } from "../config/env";
+import apiClient from "../lib/apiClient";
+import { generateMockInvoices, generateMockInvoiceDetail } from "../mock/invoices.mock";
 
-const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
+const delay = (ms = 400) => new Promise((r) => setTimeout(r, ms));
 
 // Mock implementation
 const mock = {
@@ -14,23 +14,24 @@ const mock = {
     let filtered = invoices;
 
     if (filters.status) {
-      filtered = filtered.filter(inv => inv.status === filters.status);
+      filtered = filtered.filter((inv) => inv.status === filters.status);
     }
 
     if (filters.search) {
       const term = filters.search.toLowerCase();
-      filtered = filtered.filter(inv =>
-        inv.invoiceNumber.toLowerCase().includes(term) ||
-        inv.consultationType.toLowerCase().includes(term)
+      filtered = filtered.filter(
+        (inv) =>
+          inv.invoiceNumber.toLowerCase().includes(term) ||
+          inv.consultationType.toLowerCase().includes(term),
       );
     }
 
     if (filters.dateFrom) {
-      filtered = filtered.filter(inv => inv.date >= filters.dateFrom);
+      filtered = filtered.filter((inv) => inv.date >= filters.dateFrom);
     }
 
     if (filters.dateTo) {
-      filtered = filtered.filter(inv => inv.date <= filters.dateTo);
+      filtered = filtered.filter((inv) => inv.date <= filters.dateTo);
     }
 
     return filtered;
@@ -51,7 +52,7 @@ const mock = {
     };
   },
 
-  shareInvoice: async (invoiceId, method = 'email', recipient = null) => {
+  shareInvoice: async (invoiceId, method = "email", recipient = null) => {
     await delay();
     return {
       success: true,
@@ -66,9 +67,9 @@ const mock = {
     const id = `INV-${patientId}-${Date.now()}`;
     return {
       id,
-      invoiceNumber: `INV-${String(Math.floor(Math.random() * 1000000)).padStart(6, '0')}`,
+      invoiceNumber: `INV-${String(Math.floor(Math.random() * 1000000)).padStart(6, "0")}`,
       ...consultationData,
-      status: 'draft',
+      status: "draft",
     };
   },
 };
@@ -78,13 +79,12 @@ const api = {
   getPatientInvoices: (patientId, filters = {}) =>
     apiClient.get(`/patients/${patientId}/invoices`, { params: filters }),
 
-  getInvoiceDetail: (invoiceId) =>
-    apiClient.get(`/invoices/${invoiceId}`),
+  getInvoiceDetail: (invoiceId) => apiClient.get(`/invoices/${invoiceId}`),
 
   downloadInvoice: (invoiceId) =>
-    apiClient.get(`/invoices/${invoiceId}/download`, { responseType: 'blob' }),
+    apiClient.get(`/invoices/${invoiceId}/download`, { responseType: "blob" }),
 
-  shareInvoice: (invoiceId, method = 'email', recipient = null) =>
+  shareInvoice: (invoiceId, method = "email", recipient = null) =>
     apiClient.post(`/invoices/${invoiceId}/share`, { method, recipient }),
 
   generateInvoice: (patientId, consultationData) =>

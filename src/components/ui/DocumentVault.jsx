@@ -1,28 +1,25 @@
-import { Download, FileText, Calendar, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
-import { useStaffDocuments } from '../../hooks/useStaffDetail';
-import LoadingSpinner from './LoadingSpinner';
-import ErrorState from './ErrorState';
-import Badge from './Badge';
+import { Download, FileText, Calendar, CheckCircle, AlertCircle, Trash2 } from "lucide-react";
+import { useStaffDocuments } from "../../hooks/useStaffDetail";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorState from "./ErrorState";
+import Badge from "./Badge";
 
-export default function DocumentVault({
-  staffId,
-  onUpload,
-}) {
+export default function DocumentVault({ staffId, onUpload }) {
   const { documents, loading, error, refetch, deleteDocument } = useStaffDocuments(staffId);
 
   if (loading) return <LoadingSpinner label="Loading documents..." />;
   if (error) return <ErrorState message={error} onRetry={refetch} />;
 
   const categories = {
-    identity: 'Identity Documents',
-    professional: 'Professional Credentials',
-    certification: 'Certifications',
-    tax: 'Tax Documents',
-    legal: 'Legal Documents',
+    identity: "Identity Documents",
+    professional: "Professional Credentials",
+    certification: "Certifications",
+    tax: "Tax Documents",
+    legal: "Legal Documents",
   };
 
   const groupedByCategory = documents.reduce((acc, doc) => {
-    const cat = doc.category || 'other';
+    const cat = doc.category || "other";
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(doc);
     return acc;
@@ -30,11 +27,11 @@ export default function DocumentVault({
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'verified':
+      case "verified":
         return <CheckCircle size={16} className="text-[var(--success)]" />;
-      case 'expiring_soon':
+      case "expiring_soon":
         return <AlertCircle size={16} className="text-[var(--warning)]" />;
-      case 'expired':
+      case "expired":
         return <AlertCircle size={16} className="text-[var(--danger)]" />;
       default:
         return <FileText size={16} className="text-muted-foreground" />;
@@ -51,36 +48,44 @@ export default function DocumentVault({
           <div key={catKey}>
             <h3 className="text-sm font-semibold text-foreground mb-3">{catName}</h3>
             <div className="space-y-2">
-              {docs.map(doc => (
+              {docs.map((doc) => (
                 <div
                   key={doc.id}
                   className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-surface transition-colors"
                 >
-                  <div className="flex-shrink-0 mt-0.5">
-                    {getStatusIcon(doc.status)}
-                  </div>
+                  <div className="flex-shrink-0 mt-0.5">{getStatusIcon(doc.status)}</div>
 
                   <div className="flex-1">
                     <p className="font-medium text-sm text-foreground">{doc.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      Uploaded {new Date(doc.uploadedAt).toLocaleDateString('en-IN')}
+                      Uploaded {new Date(doc.uploadedAt).toLocaleDateString("en-IN")}
                     </p>
                     {doc.expiryDate && (
-                      <p className={`text-xs mt-1 ${
-                        doc.status === 'expiring_soon'
-                          ? 'text-[var(--warning)]'
-                          : doc.status === 'expired'
-                          ? 'text-[var(--danger)]'
-                          : 'text-muted-foreground'
-                      }`}>
-                        Expires: {new Date(doc.expiryDate).toLocaleDateString('en-IN')}
+                      <p
+                        className={`text-xs mt-1 ${
+                          doc.status === "expiring_soon"
+                            ? "text-[var(--warning)]"
+                            : doc.status === "expired"
+                              ? "text-[var(--danger)]"
+                              : "text-muted-foreground"
+                        }`}
+                      >
+                        Expires: {new Date(doc.expiryDate).toLocaleDateString("en-IN")}
                       </p>
                     )}
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <Badge variant={doc.status === 'verified' ? 'success' : doc.status === 'expiring_soon' ? 'warning' : 'info'}>
-                      {doc.status.replace('_', ' ')}
+                    <Badge
+                      variant={
+                        doc.status === "verified"
+                          ? "success"
+                          : doc.status === "expiring_soon"
+                            ? "warning"
+                            : "info"
+                      }
+                    >
+                      {doc.status.replace("_", " ")}
                     </Badge>
                     <button
                       onClick={() => deleteDocument(doc.id)}

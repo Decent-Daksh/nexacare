@@ -1,12 +1,12 @@
-import { USE_MOCK } from '../config/env';
-import apiClient from '../lib/apiClient';
+import { USE_MOCK } from "../config/env";
+import apiClient from "../lib/apiClient";
 import {
   generateMockWhatsAppDeliveryLog,
   generateMockDocumentTemplates,
   generateMockPhoneNumbers,
-} from '../mock/whatsapp.mock';
+} from "../mock/whatsapp.mock";
 
-const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
+const delay = (ms = 400) => new Promise((r) => setTimeout(r, ms));
 
 // Mock implementation
 const mock = {
@@ -15,7 +15,7 @@ const mock = {
     return {
       success: true,
       messageId: `MSG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      status: 'queued',
+      status: "queued",
       sentAt: new Date().toISOString(),
       recipientPhone,
       documentType,
@@ -27,10 +27,10 @@ const mock = {
     return {
       success: true,
       messageId: `MSG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      status: 'queued',
-      documentType: 'prescription',
+      status: "queued",
+      documentType: "prescription",
       recipientPhone,
-      message: 'Your prescription has been sent via WhatsApp',
+      message: "Your prescription has been sent via WhatsApp",
     };
   },
 
@@ -39,8 +39,8 @@ const mock = {
     return {
       success: true,
       messageId: `MSG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      status: 'queued',
-      documentType: 'lab_report',
+      status: "queued",
+      documentType: "lab_report",
       recipientPhone,
     };
   },
@@ -50,8 +50,8 @@ const mock = {
     return {
       success: true,
       messageId: `MSG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      status: 'queued',
-      documentType: 'medical_certificate',
+      status: "queued",
+      documentType: "medical_certificate",
       recipientPhone,
     };
   },
@@ -61,8 +61,8 @@ const mock = {
     return {
       success: true,
       messageId: `MSG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      status: 'queued',
-      documentType: 'pharmacy_dispense',
+      status: "queued",
+      documentType: "pharmacy_dispense",
       recipientPhone,
     };
   },
@@ -88,11 +88,11 @@ const mock = {
       success: true,
       verified: true,
       phoneNumber,
-      verificationCode: '123456',
+      verificationCode: "123456",
     };
   },
 
-  addPhoneNumber: async (patientId, phoneNumber, label = 'Other') => {
+  addPhoneNumber: async (patientId, phoneNumber, label = "Other") => {
     await delay();
     return {
       id: `phone-${Date.now()}`,
@@ -100,7 +100,7 @@ const mock = {
       label,
       isVerified: false,
       isPrimary: false,
-      addedAt: new Date().toISOString().split('T')[0],
+      addedAt: new Date().toISOString().split("T")[0],
     };
   },
 
@@ -108,7 +108,7 @@ const mock = {
     await delay();
     return {
       messageId,
-      status: 'read',
+      status: "read",
       sentAt: new Date().toISOString(),
       deliveredAt: new Date().toISOString(),
       readAt: new Date().toISOString(),
@@ -120,7 +120,7 @@ const mock = {
     return {
       success: true,
       messageId: `MSG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      status: 'queued',
+      status: "queued",
     };
   },
 };
@@ -128,7 +128,7 @@ const mock = {
 // Real API implementation
 const api = {
   sendDocument: (patientId, documentId, documentType, recipientPhone) =>
-    apiClient.post('/whatsapp/send-document', {
+    apiClient.post("/whatsapp/send-document", {
       patientId,
       documentId,
       documentType,
@@ -136,41 +136,38 @@ const api = {
     }),
 
   sendPrescription: (patientId, prescriptionId, recipientPhone) =>
-    apiClient.post('/whatsapp/send-prescription', {
+    apiClient.post("/whatsapp/send-prescription", {
       patientId,
       prescriptionId,
       recipientPhone,
     }),
 
   sendLabReport: (patientId, reportId, recipientPhone) =>
-    apiClient.post('/whatsapp/send-lab-report', {
+    apiClient.post("/whatsapp/send-lab-report", {
       patientId,
       reportId,
       recipientPhone,
     }),
 
   sendMedicalCertificate: (patientId, certificateId, recipientPhone) =>
-    apiClient.post('/whatsapp/send-medical-certificate', {
+    apiClient.post("/whatsapp/send-medical-certificate", {
       patientId,
       certificateId,
       recipientPhone,
     }),
 
   sendPharmacyDispenseConfirmation: (prescriptionId, dispensedItems, recipientPhone) =>
-    apiClient.post('/whatsapp/send-pharmacy-confirmation', {
+    apiClient.post("/whatsapp/send-pharmacy-confirmation", {
       prescriptionId,
       dispensedItems,
       recipientPhone,
     }),
 
-  getDeliveryLog: (patientId) =>
-    apiClient.get(`/whatsapp/delivery-log/${patientId}`),
+  getDeliveryLog: (patientId) => apiClient.get(`/whatsapp/delivery-log/${patientId}`),
 
-  getDocumentTemplates: () =>
-    apiClient.get('/whatsapp/document-templates'),
+  getDocumentTemplates: () => apiClient.get("/whatsapp/document-templates"),
 
-  getPatientPhoneNumbers: (patientId) =>
-    apiClient.get(`/patients/${patientId}/whatsapp-phones`),
+  getPatientPhoneNumbers: (patientId) => apiClient.get(`/patients/${patientId}/whatsapp-phones`),
 
   verifyPhoneNumber: (patientId, phoneNumber) =>
     apiClient.post(`/patients/${patientId}/verify-phone`, { phoneNumber }),
@@ -178,8 +175,7 @@ const api = {
   addPhoneNumber: (patientId, phoneNumber, label) =>
     apiClient.post(`/patients/${patientId}/add-phone`, { phoneNumber, label }),
 
-  getDeliveryStatus: (messageId) =>
-    apiClient.get(`/whatsapp/delivery-status/${messageId}`),
+  getDeliveryStatus: (messageId) => apiClient.get(`/whatsapp/delivery-status/${messageId}`),
 
   resendDocument: (deliveryLogId, recipientPhone) =>
     apiClient.post(`/whatsapp/resend-document/${deliveryLogId}`, { recipientPhone }),

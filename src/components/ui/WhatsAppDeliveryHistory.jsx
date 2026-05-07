@@ -1,14 +1,10 @@
-import { MessageCircle, CheckCircle, AlertCircle, RotateCcw, Copy } from 'lucide-react';
-import { useWhatsAppDeliveryLog } from '../../hooks/useWhatsAppDelivery';
-import LoadingSpinner from './LoadingSpinner';
-import ErrorState from './ErrorState';
-import Badge from './Badge';
+import { MessageCircle, CheckCircle, AlertCircle, RotateCcw, Copy } from "lucide-react";
+import { useWhatsAppDeliveryLog } from "../../hooks/useWhatsAppDelivery";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorState from "./ErrorState";
+import Badge from "./Badge";
 
-export default function WhatsAppDeliveryHistory({
-  patientId,
-  onResend,
-  limit = 10,
-}) {
+export default function WhatsAppDeliveryHistory({ patientId, onResend, limit = 10 }) {
   const { deliveryLog, loading, error, refetch } = useWhatsAppDeliveryLog(patientId);
 
   if (loading) return <LoadingSpinner label="Loading delivery history..." />;
@@ -18,11 +14,11 @@ export default function WhatsAppDeliveryHistory({
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'delivered':
+      case "delivered":
         return <CheckCircle size={16} className="text-[var(--success)]" />;
-      case 'read':
+      case "read":
         return <CheckCircle size={16} className="text-[var(--brand)]" />;
-      case 'failed':
+      case "failed":
         return <AlertCircle size={16} className="text-[var(--danger)]" />;
       default:
         return <MessageCircle size={16} className="text-muted-foreground" />;
@@ -31,17 +27,17 @@ export default function WhatsAppDeliveryHistory({
 
   const getStatusBadge = (status) => {
     const variants = {
-      delivered: 'success',
-      read: 'brand',
-      failed: 'danger',
-      queued: 'warning',
+      delivered: "success",
+      read: "brand",
+      failed: "danger",
+      queued: "warning",
     };
-    return variants[status] || 'info';
+    return variants[status] || "info";
   };
 
   const formatTime = (date) => {
     const d = new Date(date);
-    return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
   };
 
   const formatDate = (date) => {
@@ -50,9 +46,9 @@ export default function WhatsAppDeliveryHistory({
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    if (d.toDateString() === today.toDateString()) return 'Today';
-    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
-    return d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+    if (d.toDateString() === today.toDateString()) return "Today";
+    if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+    return d.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
   };
 
   return (
@@ -69,19 +65,15 @@ export default function WhatsAppDeliveryHistory({
               key={delivery.id}
               className="flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-surface transition-colors"
             >
-              <div className="mt-1 flex-shrink-0">
-                {getStatusIcon(delivery.status)}
-              </div>
+              <div className="mt-1 flex-shrink-0">{getStatusIcon(delivery.status)}</div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="font-medium text-sm text-foreground capitalize">
-                      {delivery.documentType.replace('_', ' ')}
+                      {delivery.documentType.replace("_", " ")}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {delivery.patientPhone}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{delivery.patientPhone}</p>
                   </div>
                   <Badge variant={getStatusBadge(delivery.status)}>
                     {delivery.status.charAt(0).toUpperCase() + delivery.status.slice(1)}
@@ -99,14 +91,12 @@ export default function WhatsAppDeliveryHistory({
                 </div>
 
                 {delivery.failureReason && (
-                  <p className="mt-2 text-xs text-[var(--danger)]">
-                    {delivery.failureReason}
-                  </p>
+                  <p className="mt-2 text-xs text-[var(--danger)]">{delivery.failureReason}</p>
                 )}
               </div>
 
               <div className="flex gap-1 flex-shrink-0">
-                {delivery.status === 'failed' && (
+                {delivery.status === "failed" && (
                   <button
                     onClick={() => onResend?.(delivery.id, delivery.patientPhone)}
                     className="p-2 hover:bg-surface rounded-lg transition text-muted-foreground hover:text-foreground"

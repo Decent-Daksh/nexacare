@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { crmService } from '../services/crm.service';
+import { useState, useEffect, useCallback } from "react";
+import { crmService } from "../services/crm.service";
 
 export function useCRM() {
   const [campaigns, setCampaigns] = useState([]);
@@ -9,12 +9,21 @@ export function useCRM() {
   const [error, setError] = useState(null);
 
   const fetch = useCallback(async () => {
-    setLoading(true); setError(null);
+    setLoading(true);
+    setError(null);
     try {
       const r = await crmService.getAll();
-      setCampaigns(r.campaigns); setRecallQueue(r.recallQueue); setNpsData(r.npsData);
-    } catch (e) { setError(e.message); } finally { setLoading(false); }
+      setCampaigns(r.campaigns);
+      setRecallQueue(r.recallQueue);
+      setNpsData(r.npsData);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
   return { campaigns, recallQueue, npsData, loading, error, refetch: fetch };
 }

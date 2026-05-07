@@ -1,9 +1,21 @@
-export const initials = (name = '') =>
-  name.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+export const initials = (name = "") =>
+  name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
-export const inrColors = ['bg-[var(--brand)]', 'bg-[var(--ai)]', 'bg-[var(--info)]', 'bg-[oklch(0.7_0.15_30)]', 'bg-[oklch(0.65_0.16_300)]'];
+export const inrColors = [
+  "bg-[var(--brand)]",
+  "bg-[var(--ai)]",
+  "bg-[var(--info)]",
+  "bg-[oklch(0.7_0.15_30)]",
+  "bg-[oklch(0.65_0.16_300)]",
+];
 
-export default function Avatar({ name, size = 36, className = '' }) {
+export default function Avatar({ name, size = 36, className = "" }) {
   const idx = (name?.charCodeAt(0) || 0) % inrColors.length;
   return (
     <div

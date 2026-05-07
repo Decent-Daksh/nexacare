@@ -1,15 +1,15 @@
-import { USE_MOCK } from '../config/env';
-import apiClient from '../lib/apiClient';
+import { USE_MOCK } from "../config/env";
+import apiClient from "../lib/apiClient";
 import {
   mockStaff,
   generateMockStaffDetail,
   generateMockStaffDocuments,
   generateMockPayrollHistory,
   generateMockPerformanceTimeline,
-} from '../mock/staff.mock';
+} from "../mock/staff.mock";
 
 /* STAFF SERVICE — GET /staff  GET /shifts  GET /attendance */
-const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
+const delay = (ms = 400) => new Promise((r) => setTimeout(r, ms));
 
 const mock = {
   getAll: async () => {
@@ -34,9 +34,9 @@ const mock = {
 
   getPayrollDetail: async (payrollId) => {
     await delay();
-    const [, staffId, year, month] = payrollId.split('-');
+    const [, staffId, year, month] = payrollId.split("-");
     const payrolls = generateMockPayrollHistory(staffId, 12);
-    return payrolls.find(p => p.id === payrollId);
+    return payrolls.find((p) => p.id === payrollId);
   },
 
   getPerformanceTimeline: async (staffId) => {
@@ -54,7 +54,7 @@ const mock = {
       fileName: file.name,
       uploadedAt: new Date().toISOString(),
       expiryDate,
-      status: 'pending_verification',
+      status: "pending_verification",
       category: documentType,
     };
   },
@@ -65,7 +65,7 @@ const mock = {
       success: true,
       documentId,
       verifiedAt: new Date().toISOString(),
-      status: 'verified',
+      status: "verified",
     };
   },
 
@@ -85,7 +85,7 @@ const mock = {
 };
 
 const api = {
-  getAll: () => apiClient.get('/staff'),
+  getAll: () => apiClient.get("/staff"),
 
   getStaffDetail: (staffId) => apiClient.get(`/staff/${staffId}`),
 
@@ -96,28 +96,25 @@ const api = {
 
   getPayrollDetail: (payrollId) => apiClient.get(`/payroll/${payrollId}`),
 
-  getPerformanceTimeline: (staffId) =>
-    apiClient.get(`/staff/${staffId}/performance`),
+  getPerformanceTimeline: (staffId) => apiClient.get(`/staff/${staffId}/performance`),
 
   uploadDocument: (staffId, file, documentType, expiryDate) => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('documentType', documentType);
-    if (expiryDate) formData.append('expiryDate', expiryDate);
+    formData.append("file", file);
+    formData.append("documentType", documentType);
+    if (expiryDate) formData.append("expiryDate", expiryDate);
 
     return apiClient.post(`/staff/${staffId}/documents`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { "Content-Type": "multipart/form-data" },
     });
   },
 
-  verifyDocument: (documentId) =>
-    apiClient.post(`/documents/${documentId}/verify`),
+  verifyDocument: (documentId) => apiClient.post(`/documents/${documentId}/verify`),
 
-  deleteDocument: (documentId) =>
-    apiClient.delete(`/documents/${documentId}`),
+  deleteDocument: (documentId) => apiClient.delete(`/documents/${documentId}`),
 
   downloadPayrollSlip: (payrollId) =>
-    apiClient.get(`/payroll/${payrollId}/download`, { responseType: 'blob' }),
+    apiClient.get(`/payroll/${payrollId}/download`, { responseType: "blob" }),
 };
 
 export const staffService = USE_MOCK ? mock : api;

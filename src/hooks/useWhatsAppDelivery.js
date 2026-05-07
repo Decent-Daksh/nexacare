@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { whatsappService } from '../services/whatsapp.service';
+import { useState, useCallback, useEffect } from "react";
+import { whatsappService } from "../services/whatsapp.service";
 
 export function useWhatsAppDelivery() {
   const [loading, setLoading] = useState(false);
@@ -13,11 +13,11 @@ export function useWhatsAppDelivery() {
         patientId,
         documentId,
         documentType,
-        recipientPhone
+        recipientPhone,
       );
       return result;
     } catch (err) {
-      const errorMsg = err.message || 'Failed to send document';
+      const errorMsg = err.message || "Failed to send document";
       setError(errorMsg);
       throw err;
     } finally {
@@ -29,10 +29,14 @@ export function useWhatsAppDelivery() {
     setLoading(true);
     setError(null);
     try {
-      const result = await whatsappService.sendPrescription(patientId, prescriptionId, recipientPhone);
+      const result = await whatsappService.sendPrescription(
+        patientId,
+        prescriptionId,
+        recipientPhone,
+      );
       return result;
     } catch (err) {
-      setError(err.message || 'Failed to send prescription');
+      setError(err.message || "Failed to send prescription");
       throw err;
     } finally {
       setLoading(false);
@@ -46,7 +50,7 @@ export function useWhatsAppDelivery() {
       const result = await whatsappService.sendLabReport(patientId, reportId, recipientPhone);
       return result;
     } catch (err) {
-      setError(err.message || 'Failed to send lab report');
+      setError(err.message || "Failed to send lab report");
       throw err;
     } finally {
       setLoading(false);
@@ -60,11 +64,11 @@ export function useWhatsAppDelivery() {
       const result = await whatsappService.sendMedicalCertificate(
         patientId,
         certificateId,
-        recipientPhone
+        recipientPhone,
       );
       return result;
     } catch (err) {
-      setError(err.message || 'Failed to send medical certificate');
+      setError(err.message || "Failed to send medical certificate");
       throw err;
     } finally {
       setLoading(false);
@@ -99,7 +103,7 @@ export function useWhatsAppDeliveryLog(patientId) {
       const data = await whatsappService.getDeliveryLog(patientId);
       setDeliveryLog(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch delivery log');
+      setError(err.message || "Failed to fetch delivery log");
       setDeliveryLog([]);
     } finally {
       setLoading(false);
@@ -136,7 +140,7 @@ export function useWhatsAppPhoneNumbers(patientId) {
       const data = await whatsappService.getPatientPhoneNumbers(patientId);
       setPhoneNumbers(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch phone numbers');
+      setError(err.message || "Failed to fetch phone numbers");
       setPhoneNumbers([]);
     } finally {
       setLoading(false);
@@ -148,17 +152,17 @@ export function useWhatsAppPhoneNumbers(patientId) {
   }, [fetch]);
 
   const addPhone = useCallback(
-    async (phoneNumber, label = 'Other') => {
+    async (phoneNumber, label = "Other") => {
       try {
         const newPhone = await whatsappService.addPhoneNumber(patientId, phoneNumber, label);
-        setPhoneNumbers(prev => [...prev, newPhone]);
+        setPhoneNumbers((prev) => [...prev, newPhone]);
         return newPhone;
       } catch (err) {
         setError(err.message);
         throw err;
       }
     },
-    [patientId]
+    [patientId],
   );
 
   const verifyPhone = useCallback(
@@ -166,8 +170,8 @@ export function useWhatsAppPhoneNumbers(patientId) {
       try {
         const result = await whatsappService.verifyPhoneNumber(patientId, phoneNumber);
         if (result.verified) {
-          setPhoneNumbers(prev =>
-            prev.map(p => (p.number === phoneNumber ? { ...p, isVerified: true } : p))
+          setPhoneNumbers((prev) =>
+            prev.map((p) => (p.number === phoneNumber ? { ...p, isVerified: true } : p)),
           );
         }
         return result;
@@ -176,7 +180,7 @@ export function useWhatsAppPhoneNumbers(patientId) {
         throw err;
       }
     },
-    [patientId]
+    [patientId],
   );
 
   return {

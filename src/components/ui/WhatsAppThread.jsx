@@ -1,14 +1,14 @@
-import { useRef, useState } from 'react';
-import { Send, Smile, BookOpen } from 'lucide-react';
-import { useWhatsAppConversation, useWhatsAppMessageTemplates } from '../../hooks/useWhatsAppCommunication';
-import LoadingSpinner from './LoadingSpinner';
-import ErrorState from './ErrorState';
+import { useRef, useState } from "react";
+import { Send, Smile, BookOpen } from "lucide-react";
+import {
+  useWhatsAppConversation,
+  useWhatsAppMessageTemplates,
+} from "../../hooks/useWhatsAppCommunication";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorState from "./ErrorState";
 
-export default function WhatsAppThread({
-  conversationId,
-  onClose,
-}) {
-  const [messageText, setMessageText] = useState('');
+export default function WhatsAppThread({ conversationId, onClose }) {
+  const [messageText, setMessageText] = useState("");
   const [showTemplates, setShowTemplates] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
   const inputRef = useRef(null);
@@ -26,10 +26,10 @@ export default function WhatsAppThread({
     setSendingMessage(true);
     try {
       await sendMessage(messageText);
-      setMessageText('');
+      setMessageText("");
       inputRef.current?.focus();
     } catch (err) {
-      console.error('Failed to send message:', err);
+      console.error("Failed to send message:", err);
     } finally {
       setSendingMessage(false);
     }
@@ -38,24 +38,24 @@ export default function WhatsAppThread({
   const handleUseTemplate = async (templateId) => {
     setSendingMessage(true);
     try {
-      await useTemplate(templateId, { patientName: 'John Doe' });
+      await useTemplate(templateId, { patientName: "John Doe" });
       setShowTemplates(false);
     } catch (err) {
-      console.error('Failed to use template:', err);
+      console.error("Failed to use template:", err);
     } finally {
       setSendingMessage(false);
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
 
   const groupedMessages = messages.reduce((groups, msg) => {
-    const date = new Date(msg.timestamp).toLocaleDateString('en-IN');
+    const date = new Date(msg.timestamp).toLocaleDateString("en-IN");
     if (!groups[date]) groups[date] = [];
     groups[date].push(msg);
     return groups;
@@ -79,26 +79,24 @@ export default function WhatsAppThread({
               {dayMessages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex ${msg.author === 'doctor' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${msg.author === "doctor" ? "justify-end" : "justify-start"}`}
                 >
                   <div
                     className={`max-w-xs lg:max-w-md rounded-lg px-4 py-2 ${
-                      msg.author === 'doctor'
-                        ? 'bg-[var(--brand)] text-white'
-                        : 'bg-background border border-border text-foreground'
+                      msg.author === "doctor"
+                        ? "bg-[var(--brand)] text-white"
+                        : "bg-background border border-border text-foreground"
                     }`}
                   >
                     <p className="text-sm">{msg.text}</p>
                     <p
                       className={`text-xs mt-1 ${
-                        msg.author === 'doctor'
-                          ? 'text-white/70'
-                          : 'text-muted-foreground'
+                        msg.author === "doctor" ? "text-white/70" : "text-muted-foreground"
                       }`}
                     >
-                      {new Date(msg.timestamp).toLocaleTimeString('en-IN', {
-                        hour: '2-digit',
-                        minute: '2-digit',
+                      {new Date(msg.timestamp).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
                       })}
                     </p>
                   </div>
@@ -114,7 +112,7 @@ export default function WhatsAppThread({
       {showTemplates && (
         <div className="border-t border-border bg-background p-3 max-h-48 overflow-y-auto">
           <div className="space-y-2">
-            {templates.map(template => (
+            {templates.map((template) => (
               <button
                 key={template.id}
                 onClick={() => handleUseTemplate(template.id)}
@@ -122,9 +120,7 @@ export default function WhatsAppThread({
                 className="w-full text-left p-3 rounded-lg border border-border hover:bg-surface transition-colors disabled:opacity-50"
               >
                 <p className="font-medium text-sm text-foreground">{template.name}</p>
-                <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                  {template.text}
-                </p>
+                <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{template.text}</p>
               </button>
             ))}
           </div>
@@ -157,16 +153,10 @@ export default function WhatsAppThread({
             disabled={sendingMessage || !messageText.trim()}
             className="p-2 rounded-lg bg-[var(--brand)] hover:bg-[var(--brand-hover)] transition-colors disabled:opacity-50"
           >
-            <Send
-              size={18}
-              className={sendingMessage ? 'animate-pulse' : ''}
-              color="white"
-            />
+            <Send size={18} className={sendingMessage ? "animate-pulse" : ""} color="white" />
           </button>
         </div>
-        <p className="text-xs text-muted-foreground">
-          💡 Tip: Press Shift+Enter for new line
-        </p>
+        <p className="text-xs text-muted-foreground">💡 Tip: Press Shift+Enter for new line</p>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { whatsappCommunicationService } from '../services/whatsappCommunication.service';
+import { useState, useCallback, useEffect, useRef } from "react";
+import { whatsappCommunicationService } from "../services/whatsappCommunication.service";
 
 export function useWhatsAppConversationList(patientId) {
   const [conversations, setConversations] = useState([]);
@@ -19,7 +19,7 @@ export function useWhatsAppConversationList(patientId) {
       const data = await whatsappCommunicationService.getConversationList(patientId);
       setConversations(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch conversations');
+      setError(err.message || "Failed to fetch conversations");
       setConversations([]);
     } finally {
       setLoading(false);
@@ -57,7 +57,7 @@ export function useWhatsAppConversation(conversationId) {
       const data = await whatsappCommunicationService.getConversation(conversationId);
       setMessages(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch conversation');
+      setError(err.message || "Failed to fetch conversation");
       setMessages([]);
     } finally {
       setLoading(false);
@@ -69,7 +69,7 @@ export function useWhatsAppConversation(conversationId) {
   }, [fetch]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const sendMessage = useCallback(
@@ -77,18 +77,15 @@ export function useWhatsAppConversation(conversationId) {
       if (!conversationId || !text.trim()) return;
 
       try {
-        const newMessage = await whatsappCommunicationService.sendMessage(
-          conversationId,
-          text
-        );
-        setMessages(prev => [...prev, newMessage]);
+        const newMessage = await whatsappCommunicationService.sendMessage(conversationId, text);
+        setMessages((prev) => [...prev, newMessage]);
         return newMessage;
       } catch (err) {
         setError(err.message);
         throw err;
       }
     },
-    [conversationId]
+    [conversationId],
   );
 
   const useTemplate = useCallback(
@@ -99,16 +96,16 @@ export function useWhatsAppConversation(conversationId) {
         const newMessage = await whatsappCommunicationService.useTemplate(
           conversationId,
           templateId,
-          variables
+          variables,
         );
-        setMessages(prev => [...prev, newMessage]);
+        setMessages((prev) => [...prev, newMessage]);
         return newMessage;
       } catch (err) {
         setError(err.message);
         throw err;
       }
     },
-    [conversationId]
+    [conversationId],
   );
 
   return {
@@ -134,7 +131,7 @@ export function useWhatsAppMessageTemplates() {
       const data = await whatsappCommunicationService.getMessageTemplates();
       setTemplates(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch templates');
+      setError(err.message || "Failed to fetch templates");
       setTemplates([]);
     } finally {
       setLoading(false);

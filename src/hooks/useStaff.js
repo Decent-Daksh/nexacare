@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { staffService } from '../services/staff.service';
+import { useState, useEffect, useCallback } from "react";
+import { staffService } from "../services/staff.service";
 
 export function useStaff() {
   const [staff, setStaff] = useState([]);
@@ -9,12 +9,21 @@ export function useStaff() {
   const [error, setError] = useState(null);
 
   const fetch = useCallback(async () => {
-    setLoading(true); setError(null);
+    setLoading(true);
+    setError(null);
     try {
       const r = await staffService.getAll();
-      setStaff(r.staff); setShifts(r.shifts); setAttendance(r.attendance);
-    } catch (e) { setError(e.message); } finally { setLoading(false); }
+      setStaff(r.staff);
+      setShifts(r.shifts);
+      setAttendance(r.attendance);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
   return { staff, shifts, attendance, loading, error, refetch: fetch };
 }

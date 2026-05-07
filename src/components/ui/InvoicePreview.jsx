@@ -1,14 +1,9 @@
-import { X, Download, Share2, Printer, ArrowLeft } from 'lucide-react';
-import { useInvoiceDetail } from '../../hooks/usePatientInvoices';
-import LoadingSpinner from './LoadingSpinner';
-import ErrorState from './ErrorState';
+import { X, Download, Share2, Printer, ArrowLeft } from "lucide-react";
+import { useInvoiceDetail } from "../../hooks/usePatientInvoices";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorState from "./ErrorState";
 
-export default function InvoicePreview({
-  invoiceId,
-  onClose,
-  onDownload,
-  onShare,
-}) {
+export default function InvoicePreview({ invoiceId, onClose, onDownload, onShare }) {
   const { invoice, loading, error, refetch } = useInvoiceDetail(invoiceId);
 
   if (loading) return <LoadingSpinner label="Loading invoice..." />;
@@ -32,9 +27,7 @@ export default function InvoicePreview({
             <ArrowLeft size={20} className="text-foreground" />
           </button>
           <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              {invoice.invoiceNumber}
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground">{invoice.invoiceNumber}</h2>
             <p className="text-sm text-muted-foreground">Invoice Details</p>
           </div>
         </div>
@@ -76,9 +69,7 @@ export default function InvoicePreview({
           {/* Invoice Header */}
           <div className="grid grid-cols-2 gap-8 mb-8">
             <div>
-              <h3 className="text-sm font-semibold text-muted-foreground mb-2">
-                CLINIC
-              </h3>
+              <h3 className="text-sm font-semibold text-muted-foreground mb-2">CLINIC</h3>
               <p className="font-semibold text-foreground">{invoice.clinic.name}</p>
               <p className="text-sm text-muted-foreground">{invoice.clinic.address}</p>
               <p className="text-sm text-muted-foreground">{invoice.clinic.phone}</p>
@@ -89,21 +80,25 @@ export default function InvoicePreview({
             </div>
             <div className="text-right">
               <p className="text-xs text-muted-foreground mb-1">INVOICE #</p>
-              <p className="text-2xl font-bold text-[var(--brand)] mb-4">
-                {invoice.invoiceNumber}
+              <p className="text-2xl font-bold text-[var(--brand)] mb-4">{invoice.invoiceNumber}</p>
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold">Date:</span>{" "}
+                {new Date(invoice.date).toLocaleDateString("en-IN")}
               </p>
               <p className="text-sm text-muted-foreground">
-                <span className="font-semibold">Date:</span> {new Date(invoice.date).toLocaleDateString('en-IN')}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold">Due:</span> {new Date(invoice.dueDate).toLocaleDateString('en-IN')}
+                <span className="font-semibold">Due:</span>{" "}
+                {new Date(invoice.dueDate).toLocaleDateString("en-IN")}
               </p>
               <div className="mt-4">
-                <span className={`px-3 py-1 rounded text-sm font-semibold text-white ${
-                  invoice.status === 'paid' ? 'bg-[var(--success)]' :
-                  invoice.status === 'pending' ? 'bg-[var(--warning)]' :
-                  'bg-[var(--danger)]'
-                }`}>
+                <span
+                  className={`px-3 py-1 rounded text-sm font-semibold text-white ${
+                    invoice.status === "paid"
+                      ? "bg-[var(--success)]"
+                      : invoice.status === "pending"
+                        ? "bg-[var(--warning)]"
+                        : "bg-[var(--danger)]"
+                  }`}
+                >
                   {invoice.status.toUpperCase()}
                 </span>
               </div>
@@ -113,9 +108,7 @@ export default function InvoicePreview({
           {/* Patient & Doctor Info */}
           <div className="grid grid-cols-2 gap-8 mb-8 pb-8 border-b border-border">
             <div>
-              <h4 className="text-sm font-semibold text-muted-foreground mb-2">
-                PATIENT
-              </h4>
+              <h4 className="text-sm font-semibold text-muted-foreground mb-2">PATIENT</h4>
               <p className="font-semibold text-foreground">{invoice.patient.name}</p>
               <p className="text-sm text-muted-foreground">{invoice.patient.phone}</p>
               <p className="text-sm text-muted-foreground">{invoice.patient.email}</p>
@@ -125,13 +118,9 @@ export default function InvoicePreview({
               </p>
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-muted-foreground mb-2">
-                PHYSICIAN
-              </h4>
+              <h4 className="text-sm font-semibold text-muted-foreground mb-2">PHYSICIAN</h4>
               <p className="font-semibold text-foreground">{invoice.doctor.name}</p>
-              <p className="text-sm text-muted-foreground">
-                {invoice.doctor.specialization}
-              </p>
+              <p className="text-sm text-muted-foreground">{invoice.doctor.specialization}</p>
               <p className="text-xs text-muted-foreground mt-2">
                 License: {invoice.doctor.license}
               </p>
@@ -145,9 +134,7 @@ export default function InvoicePreview({
                 <th className="text-left py-3 text-sm font-semibold text-muted-foreground">
                   Description
                 </th>
-                <th className="text-right py-3 text-sm font-semibold text-muted-foreground">
-                  Qty
-                </th>
+                <th className="text-right py-3 text-sm font-semibold text-muted-foreground">Qty</th>
                 <th className="text-right py-3 text-sm font-semibold text-muted-foreground">
                   Unit Price
                 </th>
@@ -161,9 +148,7 @@ export default function InvoicePreview({
                 <tr key={idx} className="border-b border-border/50">
                   <td className="py-3 text-sm text-foreground">{item.description}</td>
                   <td className="text-right py-3 text-sm text-foreground">{item.quantity}</td>
-                  <td className="text-right py-3 text-sm text-foreground">
-                    ₹{item.unitPrice}
-                  </td>
+                  <td className="text-right py-3 text-sm text-foreground">₹{item.unitPrice}</td>
                   <td className="text-right py-3 text-sm font-semibold text-foreground">
                     ₹{item.amount}
                   </td>
@@ -201,20 +186,19 @@ export default function InvoicePreview({
           {/* Payment Info */}
           {invoice.payment && (
             <div className="mb-8 pb-8 border-b border-border">
-              <h4 className="text-sm font-semibold text-muted-foreground mb-3">
-                PAYMENT DETAILS
-              </h4>
+              <h4 className="text-sm font-semibold text-muted-foreground mb-3">PAYMENT DETAILS</h4>
               <div className="text-sm text-foreground space-y-1">
                 <p>
                   <span className="text-muted-foreground">Method:</span> {invoice.payment.method}
                 </p>
                 <p>
-                  <span className="text-muted-foreground">Transaction ID:</span> {invoice.payment.transactionId}
+                  <span className="text-muted-foreground">Transaction ID:</span>{" "}
+                  {invoice.payment.transactionId}
                 </p>
                 {invoice.payment.paidDate && (
                   <p>
-                    <span className="text-muted-foreground">Paid on:</span>{' '}
-                    {new Date(invoice.payment.paidDate).toLocaleDateString('en-IN')}
+                    <span className="text-muted-foreground">Paid on:</span>{" "}
+                    {new Date(invoice.payment.paidDate).toLocaleDateString("en-IN")}
                   </p>
                 )}
               </div>
@@ -223,9 +207,7 @@ export default function InvoicePreview({
 
           {/* Notes */}
           {invoice.notes && (
-            <div className="text-center text-xs text-muted-foreground italic">
-              {invoice.notes}
-            </div>
+            <div className="text-center text-xs text-muted-foreground italic">{invoice.notes}</div>
           )}
         </div>
       </div>

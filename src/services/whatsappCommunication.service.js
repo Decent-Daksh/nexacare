@@ -1,12 +1,12 @@
-import { USE_MOCK } from '../config/env';
-import apiClient from '../lib/apiClient';
+import { USE_MOCK } from "../config/env";
+import apiClient from "../lib/apiClient";
 import {
   generateMockWhatsAppConversation,
   generateMockWhatsAppConversationList,
   generateMockMessageTemplates,
-} from '../mock/whatsappCommunication.mock';
+} from "../mock/whatsappCommunication.mock";
 
-const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
+const delay = (ms = 400) => new Promise((r) => setTimeout(r, ms));
 
 // Mock implementation
 const mock = {
@@ -17,7 +17,7 @@ const mock = {
 
   getConversation: async (conversationId) => {
     await delay();
-    return generateMockWhatsAppConversation(conversationId.split('-')[1]);
+    return generateMockWhatsAppConversation(conversationId.split("-")[1]);
   },
 
   sendMessage: async (conversationId, message) => {
@@ -25,11 +25,11 @@ const mock = {
     return {
       id: `MSG-${Date.now()}`,
       conversationId,
-      author: 'doctor',
+      author: "doctor",
       text: message,
       timestamp: new Date().toISOString(),
-      status: 'sent',
-      type: 'text',
+      status: "sent",
+      type: "text",
     };
   },
 
@@ -41,9 +41,9 @@ const mock = {
   useTemplate: async (conversationId, templateId, variables = {}) => {
     await delay();
     const templates = generateMockMessageTemplates();
-    const template = templates.find(t => t.id === templateId);
+    const template = templates.find((t) => t.id === templateId);
 
-    if (!template) throw new Error('Template not found');
+    if (!template) throw new Error("Template not found");
 
     let text = template.text;
     Object.entries(variables).forEach(([key, value]) => {
@@ -53,11 +53,11 @@ const mock = {
     return {
       id: `MSG-${Date.now()}`,
       conversationId,
-      author: 'doctor',
+      author: "doctor",
       text,
       timestamp: new Date().toISOString(),
-      status: 'sent',
-      type: 'text',
+      status: "sent",
+      type: "text",
     };
   },
 
@@ -73,7 +73,7 @@ const mock = {
       patientId,
       patientName,
       patientPhone,
-      lastMessage: 'Conversation started',
+      lastMessage: "Conversation started",
       lastMessageTime: new Date().toISOString(),
       unreadCount: 0,
       messageCount: 1,
@@ -97,16 +97,14 @@ const api = {
   getConversationList: (patientId) =>
     apiClient.get(`/patients/${patientId}/whatsapp-conversations`),
 
-  getConversation: (conversationId) =>
-    apiClient.get(`/whatsapp-conversations/${conversationId}`),
+  getConversation: (conversationId) => apiClient.get(`/whatsapp-conversations/${conversationId}`),
 
   sendMessage: (conversationId, message) =>
     apiClient.post(`/whatsapp-conversations/${conversationId}/messages`, {
       message,
     }),
 
-  getMessageTemplates: () =>
-    apiClient.get('/whatsapp-message-templates'),
+  getMessageTemplates: () => apiClient.get("/whatsapp-message-templates"),
 
   useTemplate: (conversationId, templateId, variables) =>
     apiClient.post(`/whatsapp-conversations/${conversationId}/send-template`, {
@@ -118,7 +116,7 @@ const api = {
     apiClient.put(`/whatsapp-conversations/${conversationId}/mark-read`),
 
   createConversation: (patientId, patientPhone, patientName) =>
-    apiClient.post('/whatsapp-conversations', {
+    apiClient.post("/whatsapp-conversations", {
       patientId,
       patientPhone,
       patientName,

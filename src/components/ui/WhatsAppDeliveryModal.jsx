@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { MessageCircle, Phone, AlertCircle, CheckCircle, Plus } from 'lucide-react';
-import { useWhatsAppPhoneNumbers } from '../../hooks/useWhatsAppDelivery';
-import LoadingSpinner from './LoadingSpinner';
+import { useState } from "react";
+import { MessageCircle, Phone, AlertCircle, CheckCircle, Plus } from "lucide-react";
+import { useWhatsAppPhoneNumbers } from "../../hooks/useWhatsAppDelivery";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function WhatsAppDeliveryModal({
   open,
@@ -13,12 +13,12 @@ export default function WhatsAppDeliveryModal({
   onSendSuccess,
   onSendError,
 }) {
-  const [step, setStep] = useState('phone'); // phone, confirm, sent
+  const [step, setStep] = useState("phone"); // phone, confirm, sent
   const [selectedPhone, setSelectedPhone] = useState(null);
-  const [newPhone, setNewPhone] = useState('');
+  const [newPhone, setNewPhone] = useState("");
   const [showAddPhone, setShowAddPhone] = useState(false);
   const [sending, setSending] = useState(false);
-  const [newPhoneLabel, setNewPhoneLabel] = useState('Other');
+  const [newPhoneLabel, setNewPhoneLabel] = useState("Other");
 
   const { phoneNumbers, loading, addPhone } = useWhatsAppPhoneNumbers(patientId);
 
@@ -26,23 +26,23 @@ export default function WhatsAppDeliveryModal({
 
   const handleSendViaPhone = async (phone) => {
     setSelectedPhone(phone);
-    setStep('confirm');
+    setStep("confirm");
   };
 
   const handleConfirmSend = async () => {
     setSending(true);
     try {
       // Simulate sending
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise((r) => setTimeout(r, 1500));
       onSendSuccess?.({
         documentType,
         recipientPhone: selectedPhone.number,
         documentName,
       });
-      setStep('sent');
+      setStep("sent");
       setTimeout(() => {
         onClose();
-        setStep('phone');
+        setStep("phone");
         setSelectedPhone(null);
       }, 2000);
     } catch (err) {
@@ -57,11 +57,11 @@ export default function WhatsAppDeliveryModal({
     try {
       const addedPhone = await addPhone(newPhone, newPhoneLabel);
       setSelectedPhone(addedPhone);
-      setNewPhone('');
+      setNewPhone("");
       setShowAddPhone(false);
-      setStep('confirm');
+      setStep("confirm");
     } catch (err) {
-      console.error('Failed to add phone:', err);
+      console.error("Failed to add phone:", err);
     } finally {
       setSending(false);
     }
@@ -80,7 +80,7 @@ export default function WhatsAppDeliveryModal({
         </div>
 
         {/* Phone Selection Step */}
-        {step === 'phone' && (
+        {step === "phone" && (
           <div className="space-y-4">
             {loading ? (
               <LoadingSpinner />
@@ -90,7 +90,7 @@ export default function WhatsAppDeliveryModal({
                   <>
                     <p className="text-sm text-muted-foreground">Select recipient phone number:</p>
                     <div className="space-y-2">
-                      {phoneNumbers.map(phone => (
+                      {phoneNumbers.map((phone) => (
                         <button
                           key={phone.id}
                           onClick={() => handleSendViaPhone(phone)}
@@ -122,13 +122,13 @@ export default function WhatsAppDeliveryModal({
                     <input
                       type="tel"
                       value={newPhone}
-                      onChange={e => setNewPhone(e.target.value)}
+                      onChange={(e) => setNewPhone(e.target.value)}
                       placeholder="+91-9876543210"
                       className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--brand)]"
                     />
                     <select
                       value={newPhoneLabel}
-                      onChange={e => setNewPhoneLabel(e.target.value)}
+                      onChange={(e) => setNewPhoneLabel(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[var(--brand)]"
                     >
                       <option>Personal</option>
@@ -147,7 +147,7 @@ export default function WhatsAppDeliveryModal({
                       <button
                         onClick={() => {
                           setShowAddPhone(false);
-                          setNewPhone('');
+                          setNewPhone("");
                         }}
                         className="flex-1 px-3 py-2 bg-surface text-foreground rounded-lg text-sm font-medium hover:bg-surface-alt border border-border transition"
                       >
@@ -162,7 +162,7 @@ export default function WhatsAppDeliveryModal({
         )}
 
         {/* Confirmation Step */}
-        {step === 'confirm' && selectedPhone && (
+        {step === "confirm" && selectedPhone && (
           <div className="space-y-4">
             <div className="p-4 rounded-lg bg-surface border border-border space-y-2">
               <p className="text-sm text-muted-foreground">Recipient:</p>
@@ -173,7 +173,9 @@ export default function WhatsAppDeliveryModal({
             <div className="p-4 rounded-lg bg-ai-soft border border-[color-mix(in_oklab,var(--ai)_30%,transparent)] space-y-2">
               <p className="text-sm text-muted-foreground">Document:</p>
               <p className="font-semibold text-foreground">{documentName}</p>
-              <p className="text-xs text-muted-foreground capitalize">{documentType.replace('_', ' ')}</p>
+              <p className="text-xs text-muted-foreground capitalize">
+                {documentType.replace("_", " ")}
+              </p>
             </div>
 
             <div className="text-xs text-muted-foreground bg-surface p-3 rounded-lg">
@@ -203,7 +205,7 @@ export default function WhatsAppDeliveryModal({
               </button>
               <button
                 onClick={() => {
-                  setStep('phone');
+                  setStep("phone");
                   setSelectedPhone(null);
                 }}
                 disabled={sending}
@@ -216,7 +218,7 @@ export default function WhatsAppDeliveryModal({
         )}
 
         {/* Sent Step */}
-        {step === 'sent' && (
+        {step === "sent" && (
           <div className="text-center py-6 space-y-3">
             <div className="flex justify-center">
               <CheckCircle size={48} className="text-[var(--success)] animate-bounce" />
@@ -231,7 +233,7 @@ export default function WhatsAppDeliveryModal({
         )}
 
         {/* Close Button */}
-        {step !== 'sent' && (
+        {step !== "sent" && (
           <button
             onClick={onClose}
             disabled={sending}

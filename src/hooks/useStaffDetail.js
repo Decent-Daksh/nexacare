@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { staffService } from '../services/staff.service';
+import { useState, useCallback, useEffect } from "react";
+import { staffService } from "../services/staff.service";
 
 export function useStaffDetail(staffId) {
   const [staff, setStaff] = useState(null);
@@ -19,7 +19,7 @@ export function useStaffDetail(staffId) {
       const data = await staffService.getStaffDetail(staffId);
       setStaff(data);
     } catch (err) {
-      setError(err.message || 'Failed to fetch staff detail');
+      setError(err.message || "Failed to fetch staff detail");
       setStaff(null);
     } finally {
       setLoading(false);
@@ -56,7 +56,7 @@ export function useStaffDocuments(staffId) {
       const data = await staffService.getStaffDocuments(staffId);
       setDocuments(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch documents');
+      setError(err.message || "Failed to fetch documents");
       setDocuments([]);
     } finally {
       setLoading(false);
@@ -70,26 +70,21 @@ export function useStaffDocuments(staffId) {
   const uploadDocument = useCallback(
     async (file, documentType, expiryDate = null) => {
       try {
-        const newDoc = await staffService.uploadDocument(
-          staffId,
-          file,
-          documentType,
-          expiryDate
-        );
-        setDocuments(prev => [newDoc, ...prev]);
+        const newDoc = await staffService.uploadDocument(staffId, file, documentType, expiryDate);
+        setDocuments((prev) => [newDoc, ...prev]);
         return newDoc;
       } catch (err) {
         setError(err.message);
         throw err;
       }
     },
-    [staffId]
+    [staffId],
   );
 
   const deleteDocument = useCallback(async (documentId) => {
     try {
       await staffService.deleteDocument(documentId);
-      setDocuments(prev => prev.filter(d => d.id !== documentId));
+      setDocuments((prev) => prev.filter((d) => d.id !== documentId));
     } catch (err) {
       setError(err.message);
       throw err;
@@ -124,7 +119,7 @@ export function usePayrollHistory(staffId, months = 12) {
       const data = await staffService.getPayrollHistory(staffId, months);
       setPayroll(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch payroll history');
+      setError(err.message || "Failed to fetch payroll history");
       setPayroll([]);
     } finally {
       setLoading(false);
@@ -139,7 +134,7 @@ export function usePayrollHistory(staffId, months = 12) {
     try {
       const result = await staffService.downloadPayrollSlip(payrollId);
       if (result.url) {
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = result.url;
         link.download = result.fileName;
         link.click();
@@ -178,7 +173,7 @@ export function usePerformanceTimeline(staffId) {
       const data = await staffService.getPerformanceTimeline(staffId);
       setTimeline(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message || 'Failed to fetch performance timeline');
+      setError(err.message || "Failed to fetch performance timeline");
       setTimeline([]);
     } finally {
       setLoading(false);
