@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { USE_MOCK } from "../config/env";
 import apiClient from "../lib/apiClient";
 import {
@@ -9,7 +8,7 @@ import {
   generateMockPerformanceTimeline,
 } from "../mock/staff.mock";
 
-/* STAFF SERVICE — GET /staff  GET /shifts  GET /attendance */
+/* STAFF SERVICE — GET /staff, GET /shifts, GET /attendance, and Staff Management */
 const delay = (ms = 400) => new Promise((r) => setTimeout(r, ms));
 
 const mock = {
@@ -35,7 +34,7 @@ const mock = {
 
   getPayrollDetail: async (payrollId) => {
     await delay();
-    const [, staffId, year, month] = payrollId.split("-");
+    const [, staffId] = payrollId.split("-");
     const payrolls = generateMockPayrollHistory(staffId, 12);
     return payrolls.find((p) => p.id === payrollId);
   },
@@ -118,14 +117,4 @@ const api = {
     apiClient.get(`/payroll/${payrollId}/download`, { responseType: "blob" }),
 };
 
-=======
-import { USE_MOCK } from '../config/env';
-import apiClient from '../lib/apiClient';
-import { mockStaff } from '../mock/staff.mock';
-
-/* STAFF SERVICE — GET /staff  GET /shifts  GET /attendance */
-const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
-const mock = { getAll: async () => { await delay(); return mockStaff(); } };
-const api  = { getAll: () => apiClient.get('/staff') };
->>>>>>> main
 export const staffService = USE_MOCK ? mock : api;

@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
-=======
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
->>>>>>> main
-
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -33,17 +28,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-<<<<<<< HEAD
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      // Branding resolved to NexaCARE from main
+      { title: "NexaCARE" },
+      { name: "description", content: "Digital Bytes Solutions" },
+      { name: "author", content: "Digital Bytes Solutions" },
+      { property: "og:title", content: "NexaCARE AI" },
+      { property: "og:description", content: "Digital Bytes Solutions" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@NexaCare" },
     ],
     links: [
+      // Kept font optimizations from local HEAD
       {
         rel: "preconnect",
         href: "https://fonts.googleapis.com",
@@ -58,19 +54,6 @@ export const Route = createRootRoute({
         href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap",
       },
       {
-=======
-      { title: "NexaCARE" },
-      { name: "description", content: "Digital Bytes Solutions" },
-      { name: "author", content: "Digital Bytes Solutions" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Digital Bytes Solutions" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "Digital Bytes Solutions" },
-    ],
-    links: [
-      {
->>>>>>> main
         rel: "stylesheet",
         href: appCss,
       },

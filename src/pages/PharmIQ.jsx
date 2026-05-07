@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState } from "react";
 import { Pill, AlertTriangle, ShoppingCart, Search } from "lucide-react";
 import { usePharmacy } from "../hooks/usePharmacy";
@@ -17,36 +16,15 @@ export default function PharmIQ() {
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorState message={error} onRetry={refetch} />;
 
-  const filtered = stock.filter((s) => s.name.toLowerCase().includes(q.toLowerCase()));
+  const filtered = stock.filter((s) => 
+    s.name.toLowerCase().includes(q.toLowerCase())
+  );
   const lowStock = stock.filter((s) => s.stock < s.reorderLevel).length;
-=======
-import { useState } from 'react';
-import { Pill, AlertTriangle, ShoppingCart, Search } from 'lucide-react';
-import { usePharmacy } from '../hooks/usePharmacy';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
-import ErrorState from '../components/ui/ErrorState';
-import Badge from '../components/ui/Badge';
-import Tabs from '../components/ui/Tabs';
-import StatCard from '../components/ui/StatCard';
-import { formatINR } from '../lib/format';
-
-export default function PharmIQ() {
-  const [tab, setTab] = useState('stock');
-  const [q, setQ] = useState('');
-  const { stock, alerts, reorderQueue, loading, error, refetch } = usePharmacy();
-
-  if (loading) return <LoadingSpinner/>;
-  if (error) return <ErrorState message={error} onRetry={refetch}/>;
-
-  const filtered = stock.filter(s => s.name.toLowerCase().includes(q.toLowerCase()));
-  const lowStock = stock.filter(s => s.stock < s.reorderLevel).length;
->>>>>>> main
 
   return (
     <div className="space-y-5">
       <div>
         <h1 className="text-2xl font-display font-bold">PharmIQ</h1>
-<<<<<<< HEAD
         <p className="text-sm text-muted-foreground mt-1">
           Smart pharmacy inventory with expiry & reorder intelligence.
         </p>
@@ -62,23 +40,12 @@ export default function PharmIQ() {
           accent="info"
         />
         <StatCard icon={Pill} label="Below Reorder" value={lowStock} accent="warn" />
-=======
-        <p className="text-sm text-muted-foreground mt-1">Smart pharmacy inventory with expiry & reorder intelligence.</p>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Pill}          label="SKUs Tracked"  value={stock.length} accent="brand"/>
-        <StatCard icon={AlertTriangle} label="Active Alerts" value={alerts.length} accent="warn"/>
-        <StatCard icon={ShoppingCart}  label="Reorders Pending" value={reorderQueue.length} accent="info"/>
-        <StatCard icon={Pill}          label="Below Reorder"  value={lowStock} accent="warn"/>
->>>>>>> main
       </div>
 
       <Tabs
         active={tab}
         onChange={setTab}
         tabs={[
-<<<<<<< HEAD
           { value: "stock", label: "Inventory", count: stock.length },
           { value: "alerts", label: "Alerts", count: alerts.length },
           { value: "reorders", label: "Reorder Queue", count: reorderQueue.length },
@@ -95,19 +62,6 @@ export default function PharmIQ() {
               placeholder="Search drugs…"
               className="bg-transparent outline-none text-sm flex-1"
             />
-=======
-          { value: 'stock', label: 'Inventory', count: stock.length },
-          { value: 'alerts', label: 'Alerts', count: alerts.length },
-          { value: 'reorders', label: 'Reorder Queue', count: reorderQueue.length },
-        ]}
-      />
-
-      {tab === 'stock' && (
-        <div className="space-y-4">
-          <div className="bg-card border border-border rounded-xl p-3 flex items-center gap-2">
-            <Search size={15} className="text-muted-foreground ml-2"/>
-            <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search drugs…" className="bg-transparent outline-none text-sm flex-1"/>
->>>>>>> main
           </div>
           <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
             <table className="w-full text-sm">
@@ -123,16 +77,11 @@ export default function PharmIQ() {
               </thead>
               <tbody>
                 {filtered.map((s, i) => (
-<<<<<<< HEAD
                   <tr key={s.id} className={`hover:bg-surface-alt ${i % 2 ? "bg-surface/40" : ""}`}>
                     <td className="px-4 py-3">
                       <div className="font-medium">{s.name}</div>
                       <div className="text-xs text-muted-foreground">Batch {s.batch}</div>
                     </td>
-=======
-                  <tr key={s.id} className={`hover:bg-surface-alt ${i % 2 ? 'bg-surface/40' : ''}`}>
-                    <td className="px-4 py-3"><div className="font-medium">{s.name}</div><div className="text-xs text-muted-foreground">Batch {s.batch}</div></td>
->>>>>>> main
                     <td className="px-4 py-3 font-mono text-xs">{s.sku}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="font-semibold">{s.stock}</div>
@@ -149,7 +98,6 @@ export default function PharmIQ() {
         </div>
       )}
 
-<<<<<<< HEAD
       {tab === "alerts" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {alerts.map((a) => (
@@ -164,15 +112,6 @@ export default function PharmIQ() {
                 <div className="flex items-center gap-2 mb-1">
                   <Badge variant="warning">{a.kind}</Badge>
                 </div>
-=======
-      {tab === 'alerts' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {alerts.map(a => (
-            <div key={a.id} className="bg-card border border-border rounded-xl p-4 border-l-4 border-l-[var(--warning)] flex items-start gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[color-mix(in_oklab,var(--warning)_18%,white)] text-[oklch(0.55_0.15_75)] flex items-center justify-center"><AlertTriangle size={16}/></div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1"><Badge variant="warning">{a.kind}</Badge></div>
->>>>>>> main
                 <div className="font-medium text-sm">{a.drug}</div>
                 <div className="text-xs text-muted-foreground">{a.detail}</div>
               </div>
@@ -181,11 +120,7 @@ export default function PharmIQ() {
         </div>
       )}
 
-<<<<<<< HEAD
       {tab === "reorders" && (
-=======
-      {tab === 'reorders' && (
->>>>>>> main
         <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-surface text-xs text-muted-foreground uppercase">
@@ -199,27 +134,18 @@ export default function PharmIQ() {
               </tr>
             </thead>
             <tbody>
-<<<<<<< HEAD
               {reorderQueue.map((r, i) => (
                 <tr key={r.id} className={`hover:bg-surface-alt ${i % 2 ? "bg-surface/40" : ""}`}>
-=======
-              {reorderQueue.map((r,i) => (
-                <tr key={r.id} className={`hover:bg-surface-alt ${i % 2 ? 'bg-surface/40' : ''}`}>
->>>>>>> main
                   <td className="px-4 py-3 font-mono text-xs">{r.id}</td>
                   <td className="px-4 py-3 font-medium">{r.drug}</td>
                   <td className="px-4 py-3 text-right">{r.quantity}</td>
                   <td className="px-4 py-3 text-muted-foreground">{r.supplier}</td>
                   <td className="px-4 py-3 text-xs">{r.eta}</td>
-<<<<<<< HEAD
                   <td className="px-4 py-3">
                     <Badge variant={r.status === "Approved" ? "success" : "warning"}>
                       {r.status}
                     </Badge>
                   </td>
-=======
-                  <td className="px-4 py-3"><Badge variant={r.status === 'Approved' ? 'success' : 'warning'}>{r.status}</Badge></td>
->>>>>>> main
                 </tr>
               ))}
             </tbody>

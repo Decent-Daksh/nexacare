@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { X } from "lucide-react";
-=======
-import { X } from 'lucide-react';
->>>>>>> main
 export default function Modal({ open, onClose, title, children, footer }) {
   if (!open) return null;
   return (
@@ -11,7 +7,6 @@ export default function Modal({ open, onClose, title, children, footer }) {
       <div className="relative bg-card rounded-2xl border border-border shadow-2xl w-full max-w-lg">
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h3 className="font-display font-semibold">{title}</h3>
-<<<<<<< HEAD
           <button onClick={onClose} className="p-1.5 rounded-md hover:bg-surface-alt">
             <X size={18} />
           </button>
@@ -22,12 +17,6 @@ export default function Modal({ open, onClose, title, children, footer }) {
             {footer}
           </div>
         )}
-=======
-          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-surface-alt"><X size={18} /></button>
-        </div>
-        <div className="p-5">{children}</div>
-        {footer && <div className="px-5 py-4 border-t border-border bg-surface flex justify-end gap-2 rounded-b-2xl">{footer}</div>}
->>>>>>> main
       </div>
     </div>
   );

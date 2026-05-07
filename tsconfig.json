@@ -10,13 +10,11 @@
     "checkJs": false,
     "esModuleInterop": true,
 
-    /* Bundler mode */
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
 
-    /* 🔴 STRICT TYPE CHECKING */
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -31,15 +29,13 @@
     "useUnknownInCatchVariables": true,
     "alwaysStrict": true,
 
-    /* Module resolution */
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-
-    /* Path Aliases */
+    
     "paths": {
       "@/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
