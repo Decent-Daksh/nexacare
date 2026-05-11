@@ -137,6 +137,7 @@ export default function AnalyticsHub() {
         <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
           <h3 className="font-display font-semibold mb-3">Daily revenue</h3>
           <div className="h-60">
+            <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.revenueTrend}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -158,6 +159,7 @@ export default function AnalyticsHub() {
                 <Bar dataKey="value" fill="var(--brand)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
@@ -165,6 +167,7 @@ export default function AnalyticsHub() {
         <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
           <h3 className="font-display font-semibold mb-3">Patient flow</h3>
           <div className="h-60">
+            <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={charts.patientFlow}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -187,6 +190,7 @@ export default function AnalyticsHub() {
                 />
               </LineChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
@@ -194,6 +198,8 @@ export default function AnalyticsHub() {
         <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
           <h3 className="font-display font-semibold mb-3">Department mix</h3>
           <div className="h-60">
+            <div style={{ width: '100%', height: 300 }}>
+
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -218,6 +224,8 @@ export default function AnalyticsHub() {
                 />
               </PieChart>
             </ResponsiveContainer>
+            </div>
+
           </div>
           <div className="grid grid-cols-2 gap-1.5 mt-2 text-xs">
             {charts.departmentMix.map((d, i) => (
@@ -236,6 +244,7 @@ export default function AnalyticsHub() {
         <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
           <h3 className="font-display font-semibold mb-3">Patient satisfaction (avg / 5)</h3>
           <div className="h-60">
+            <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={charts.satisfaction}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -258,6 +267,7 @@ export default function AnalyticsHub() {
                 />
               </LineChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>

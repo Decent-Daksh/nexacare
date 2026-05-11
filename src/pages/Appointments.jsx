@@ -112,7 +112,7 @@ export default function Appointments() {
                 </div>
               ))}
               {HOURS.map((h) => (
-                <React.Fragment key={`row-${h}`}>
+                <>
                   <div className="px-3 py-3 text-xs text-muted-foreground text-right border-t border-border">
                     {h}
                   </div>
@@ -146,7 +146,7 @@ export default function Appointments() {
                       </div>
                     );
                   })}
-                </React.Fragment>
+                </>
               ))}
             </div>
           </div>
