@@ -12,7 +12,7 @@ import DocumentVault from "../components/ui/DocumentVault";
 import PayrollHistory from "../components/ui/PayrollHistory";
 import PerformanceTimeline from "../components/ui/PerformanceTimeline";
 import DailyAttendance from "../components/staff/DailyAttendance"; // From main
-import { formatINR } from "../lib/format";
+import { useCurrency } from '../context/CurrencyContext';
 
 const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -27,7 +27,7 @@ const shiftStyle = (s) => {
 export default function StaffCommand() {
   const [selectedStaffId, setSelectedStaffId] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
-  
+  const { formatAmount } = useCurrency();
   const { staff, shifts, attendance, loading, error, refetch } = useStaff();
   const { staff: staffDetail } = useStaffDetail(selectedStaffId);
 
@@ -51,7 +51,7 @@ export default function StaffCommand() {
         <StatCard icon={Users} label="Total Staff" value={staff.length} accent="brand" />
         <StatCard icon={Calendar} label="On Shift Today" value={staff.length - 1} accent="info" />
         <StatCard icon={UserCog} label="Avg Attendance" value="94%" accent="brand" />
-        <StatCard icon={IndianRupee} label="Monthly Payroll" value={formatINR(totalPayroll)} accent="ai" />
+        <StatCard icon={IndianRupee} label="Monthly Payroll" value={formatAmount(totalPayroll)} accent="ai" />
       </div>
 
       {/* Integration: DailyAttendance component from the 'main' branch */}
@@ -91,7 +91,7 @@ export default function StaffCommand() {
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{p.role}</td>
                     <td className="px-4 py-3 font-mono text-xs">{p.phone}</td>
-                    <td className="px-4 py-3 text-right font-mono">{formatINR(p.salary)}</td>
+                    <td className="px-4 py-3 text-right font-mono">{formatAmount(p.salary)}</td>
                     <td className="px-4 py-3 text-xs">{p.joined}</td>
                     <td className="px-4 py-3">
                       <Badge variant={pct >= 95 ? "success" : pct >= 85 ? "info" : "warning"}>

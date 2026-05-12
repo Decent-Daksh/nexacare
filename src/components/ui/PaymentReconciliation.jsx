@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CreditCard, CheckCircle, XCircle, AlertTriangle, RefreshCw, Download } from "lucide-react";
 import Badge from "./Badge";
-import { formatINR } from "../../lib/format";
+import { useCurrency } from '../../context/CurrencyContext';
 
 const PAYMENT_METHODS = {
   upi: { label: "UPI", icon: "💳", color: "success" },
@@ -24,6 +24,7 @@ export default function PaymentReconciliation() {
   const [statusFilter, setStatusFilter] = useState("");
   const [methodFilter, setMethodFilter] = useState("");
   const [loading, setLoading] = useState(true);
+  const { formatAmount } = useCurrency();
 
   // Mock data - replace with actual API call
   useEffect(() => {
@@ -145,12 +146,12 @@ export default function PaymentReconciliation() {
         <div className="bg-surface rounded-lg p-4">
           <div className="text-xs text-muted-foreground mb-1">Total Transactions</div>
           <div className="text-2xl font-bold">{filteredTransactions.length}</div>
-          <div className="text-xs text-muted-foreground mt-1">{formatINR(stats.totalAmount)}</div>
+          <div className="text-xs text-muted-foreground mt-1">{formatAmount(stats.totalAmount)}</div>
         </div>
         <div className="bg-surface rounded-lg p-4">
           <div className="text-xs text-muted-foreground mb-1">Gateway Fees</div>
           <div className="text-2xl font-bold text-[var(--warning)]">
-            {formatINR(stats.totalFees)}
+            {formatAmount(stats.totalFees)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">
             {((stats.totalFees / stats.totalAmount) * 100).toFixed(1)}% avg
@@ -159,7 +160,7 @@ export default function PaymentReconciliation() {
         <div className="bg-surface rounded-lg p-4">
           <div className="text-xs text-muted-foreground mb-1">Settled Amount</div>
           <div className="text-2xl font-bold text-[var(--success)]">
-            {formatINR(stats.settledAmount)}
+            {formatAmount(stats.settledAmount)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">
             {((stats.settledAmount / stats.totalAmount) * 100).toFixed(1)}% settled
@@ -168,7 +169,7 @@ export default function PaymentReconciliation() {
         <div className="bg-surface rounded-lg p-4">
           <div className="text-xs text-muted-foreground mb-1">Pending Settlement</div>
           <div className="text-2xl font-bold text-[var(--warning)]">
-            {formatINR(stats.pendingAmount)}
+            {formatAmount(stats.pendingAmount)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">
             {((stats.pendingAmount / stats.totalAmount) * 100).toFixed(1)}% pending
@@ -273,10 +274,10 @@ export default function PaymentReconciliation() {
                       <Badge variant="info">{txn.gateway}</Badge>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <div className="font-medium">{formatINR(txn.amount)}</div>
+                      <div className="font-medium">{formatAmount(txn.amount)}</div>
                       {txn.fees > 0 && (
                         <div className="text-xs text-muted-foreground">
-                          Fee: {formatINR(txn.fees)}
+                          Fee: {formatAmount(txn.fees)}
                         </div>
                       )}
                     </td>

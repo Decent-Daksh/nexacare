@@ -36,7 +36,7 @@ import ErrorState from "../components/ui/ErrorState";
 import { useAnalytics } from "../hooks/useAnalytics";
 import { useAppointments } from "../hooks/useAppointments";
 import { useAuth } from "../lib/auth"; // Security logic from main
-import { formatINR } from "../lib/format";
+import { useCurrency } from '../context/CurrencyContext';
 import Avatar from "../components/ui/Avatar";
 
 const AUTOMATIONS = [
@@ -58,7 +58,7 @@ export default function Dashboard() {
   const { role } = useAuth(); // RBAC check
   const { kpis, charts, loading, error, refetch } = useAnalytics();
   const { data: appts } = useAppointments({ date: "2026-05-04" });
-
+  const { formatAmount } = useCurrency();
   if (loading) return <LoadingSpinner label="Loading dashboard…" />;
   if (error) return <ErrorState message={error} onRetry={refetch} />;
 
@@ -95,7 +95,7 @@ export default function Dashboard() {
         <StatCard
           icon={IndianRupee}
           label="MTD Revenue"
-          value={formatINR(kpis.monthlyRevenue)}
+          value={formatAmount(kpis.monthlyRevenue)}
           delta="+12.4% MoM"
           accent="brand"
         />
@@ -140,7 +140,7 @@ export default function Dashboard() {
                     borderRadius: 12,
                     fontSize: 12,
                   }}
-                  formatter={(v) => formatINR(v)}
+                  formatter={(v) => formatAmount(v)}
                 />
                 <Area
                   type="monotone"

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Clock, CheckCircle, AlertCircle, XCircle, Filter, Search } from "lucide-react";
 import Badge from "./Badge";
-import { formatINR } from "../../lib/format";
+import { useCurrency } from '../../context/CurrencyContext';
+
 
 const CLAIM_STATUSES = {
   submitted: { label: "Submitted", color: "warning", icon: Clock },
@@ -18,7 +19,7 @@ export default function InsuranceClaimTracker({ patientId }) {
   const [statusFilter, setStatusFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const { formatAmount } = useCurrency();
   // Mock data - replace with actual API call
   useEffect(() => {
     const mockClaims = [
@@ -208,7 +209,7 @@ export default function InsuranceClaimTracker({ patientId }) {
                         <div className="text-xs text-muted-foreground">{claim.id}</div>
                       </div>
                       <div className="text-right">
-                        <div className="font-semibold text-sm">{formatINR(claim.amount)}</div>
+                        <div className="font-semibold text-sm">{formatAmount(claim.amount)}</div>
                         <div className="text-xs text-muted-foreground">{claim.processingTime}</div>
                       </div>
                     </div>
@@ -265,7 +266,7 @@ export default function InsuranceClaimTracker({ patientId }) {
         <div className="bg-surface rounded-lg p-4">
           <div className="text-xs text-muted-foreground mb-1">Approved Amount</div>
           <div className="text-2xl font-bold text-[var(--success)]">
-            {formatINR(
+            {formatAmount(
               claims
                 .filter((c) => c.status === "approved" || c.status === "paid")
                 .reduce((sum, c) => sum + c.amount, 0),

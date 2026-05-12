@@ -1,9 +1,13 @@
 import { Bell, Search, Menu } from "lucide-react";
 import Avatar from "../ui/Avatar";
 import { useAuth } from "../../context/AuthContext";
+import { useCurrency, CURRENCIES } from '../../context/CurrencyContext';
+
 
 export default function Topbar({ onOpenMobile }) {
   const { user, clinicInfo, role, switchRole } = useAuth();
+
+  const { currencyCode, switchCurrency } = useCurrency();
 
   return (
     <header className="sticky top-0 z-30 h-[60px] bg-card/80 backdrop-blur border-b border-border flex items-center px-4 md:px-6 gap-4">
@@ -35,7 +39,7 @@ export default function Topbar({ onOpenMobile }) {
         </div>
 
         {/* Role Switcher (Merged from main) */}
-        <div className="hidden lg:flex items-center gap-2 px-3 border-r border-border">
+        <div className="hidden lg:flex items-center gap-4 px-3 border-r border-border">
           <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
             Role:
           </span>
@@ -49,6 +53,21 @@ export default function Topbar({ onOpenMobile }) {
             <option value="manager">Manager</option>
           </select>
         </div>
+
+        <div className="hidden lg:flex items-center gap-2 px-3 border-r border-border">
+        <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
+          Currency:
+        </span>
+        <select
+          value={currencyCode}
+          onChange={(e) => switchCurrency(e.target.value)}
+          className="text-xs bg-card border border-border rounded-md px-2 py-1 cursor-pointer outline-none focus:ring-1 focus:ring-primary"
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c.code} value={c.code}>{c.label}</option>
+          ))}
+        </select>
+      </div>
 
         {/* Notifications */}
         <button className="relative p-2 rounded-lg hover:bg-surface-alt">

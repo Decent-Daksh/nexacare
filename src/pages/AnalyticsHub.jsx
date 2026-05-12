@@ -18,7 +18,7 @@ import LoadingSpinner from "../components/ui/LoadingSpinner";
 import ErrorState from "../components/ui/ErrorState";
 import StatCard from "../components/ui/StatCard";
 import { Users, IndianRupee, Activity, Clock } from "lucide-react";
-import { formatINR } from "../lib/format";
+import { useCurrency } from '../context/CurrencyContext';
 
 const COLORS = [
   "var(--brand)",
@@ -37,6 +37,8 @@ export default function AnalyticsHub() {
 
   // Calculate SVG dash offset for circular health score
   const dash = 440 * (1 - healthScore / 100);
+
+  const { formatAmount } = useCurrency();
 
   return (
     <div className="space-y-5">
@@ -111,7 +113,7 @@ export default function AnalyticsHub() {
           <StatCard
             icon={IndianRupee}
             label="MTD Revenue"
-            value={formatINR(kpis.monthlyRevenue)}
+            value={formatAmount(kpis.monthlyRevenue)}
             delta="+12%"
             accent="info"
           />
@@ -154,7 +156,7 @@ export default function AnalyticsHub() {
                     borderRadius: 12,
                     fontSize: 12,
                   }}
-                  formatter={(v) => formatINR(v)}
+                  formatter={(v) => formatAmount(v)}
                 />
                 <Bar dataKey="value" fill="var(--brand)" radius={[8, 8, 0, 0]} />
               </BarChart>

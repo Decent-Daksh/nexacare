@@ -4,7 +4,7 @@ import Modal from "./Modal";
 import Badge from "./Badge";
 import { Button } from "./button";
 import { Input } from "./input";
-import { formatINR } from "../../lib/format";
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function InvoiceGenerator({ patientId, onClose, onSave }) {
   const [formData, setFormData] = useState({
@@ -16,6 +16,7 @@ export default function InvoiceGenerator({ patientId, onClose, onSave }) {
     discount: 0,
     notes: "",
   });
+  const { formatAmount } = useCurrency();
 
   const [showPreview, setShowPreview] = useState(false);
   const [calculations, setCalculations] = useState({
@@ -243,21 +244,21 @@ export default function InvoiceGenerator({ patientId, onClose, onSave }) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span>{formatINR(calculations.subtotal)}</span>
+                <span>{formatAmount(calculations.subtotal)}</span>
               </div>
               {calculations.discount > 0 && (
                 <div className="flex justify-between text-[var(--warning)]">
                   <span>Discount:</span>
-                  <span>-{formatINR(calculations.discount)}</span>
+                  <span>-{formatAmount(calculations.discount)}</span>
                 </div>
               )}
               <div className="flex justify-between">
                 <span>GST Amount:</span>
-                <span>{formatINR(calculations.gstAmount)}</span>
+                <span>{formatAmount(calculations.gstAmount)}</span>
               </div>
               <div className="border-t pt-2 flex justify-between font-semibold text-base">
                 <span>Total:</span>
-                <span>{formatINR(calculations.total)}</span>
+                <span>{formatAmount(calculations.total)}</span>
               </div>
             </div>
           </div>
@@ -273,7 +274,7 @@ export default function InvoiceGenerator({ patientId, onClose, onSave }) {
                 <QrCode size={48} className="text-[var(--brand)]" />
               </div>
               <p className="text-xs text-muted-foreground mb-2">
-                Scan to pay {formatINR(calculations.total)}
+                Scan to pay {formatAmount(calculations.total)}
               </p>
               <button className="text-xs text-[var(--brand)] hover:underline">Copy UPI ID</button>
             </div>
@@ -290,7 +291,7 @@ export default function InvoiceGenerator({ patientId, onClose, onSave }) {
                 📄 *Invoice {formData.invoiceNumber}*
               </div>
               <div className="text-xs text-green-700 dark:text-green-300 mb-2">
-                Total: {formatINR(calculations.total)}
+                Total: {formatAmount(calculations.total)}
               </div>
               <div className="text-xs text-green-700 dark:text-green-300">
                 Pay via UPI: merchant@upi
@@ -345,23 +346,23 @@ export default function InvoiceGenerator({ patientId, onClose, onSave }) {
                   <tr key={index} className="border-b">
                     <td className="py-2">{item.description}</td>
                     <td className="text-center py-2">{item.quantity}</td>
-                    <td className="text-right py-2">{formatINR(item.rate)}</td>
+                    <td className="text-right py-2">{formatAmount(item.rate)}</td>
                     <td className="text-right py-2">{item.gstRate}%</td>
-                    <td className="text-right py-2">{formatINR(item.quantity * item.rate)}</td>
+                    <td className="text-right py-2">{formatAmount(item.quantity * item.rate)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
             <div className="text-right">
-              <p className="text-sm">Subtotal: {formatINR(calculations.subtotal)}</p>
+              <p className="text-sm">Subtotal: {formatAmount(calculations.subtotal)}</p>
               {calculations.discount > 0 && (
                 <p className="text-sm text-[var(--warning)]">
-                  Discount: -{formatINR(calculations.discount)}
+                  Discount: -{formatAmount(calculations.discount)}
                 </p>
               )}
-              <p className="text-sm">GST: {formatINR(calculations.gstAmount)}</p>
-              <p className="font-bold text-lg">Total: {formatINR(calculations.total)}</p>
+              <p className="text-sm">GST: {formatAmount(calculations.gstAmount)}</p>
+              <p className="font-bold text-lg">Total: {formatAmount(calculations.total)}</p>
             </div>
           </div>
 

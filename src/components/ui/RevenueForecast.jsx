@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { TrendingUp, TrendingDown, Calendar, Target, AlertTriangle } from "lucide-react";
 import Badge from "./Badge";
-import { formatINR } from "../../lib/format";
+import { useCurrency } from '../../context/CurrencyContext';
+
 
 export default function RevenueForecast() {
   const [forecastData, setForecastData] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState("30");
   const [loading, setLoading] = useState(true);
-
+  const { formatAmount } = useCurrency();
   // Mock forecast data - replace with actual API call
   useEffect(() => {
     const mockData = {
@@ -98,7 +99,7 @@ export default function RevenueForecast() {
             <Target size={16} className="text-[var(--brand)]" />
             <div className="text-xs text-muted-foreground">Projected Revenue</div>
           </div>
-          <div className="text-2xl font-bold">{formatINR(stats.totalProjected)}</div>
+          <div className="text-2xl font-bold">{formatAmount(stats.totalProjected)}</div>
           <div className="flex items-center gap-1 mt-1">
             <TrendingUp size={12} className="text-[var(--success)]" />
             <span className="text-xs text-[var(--success)]">
@@ -112,7 +113,7 @@ export default function RevenueForecast() {
             <Calendar size={16} className="text-[var(--info)]" />
             <div className="text-xs text-muted-foreground">Actual to Date</div>
           </div>
-          <div className="text-2xl font-bold">{formatINR(stats.totalActual)}</div>
+          <div className="text-2xl font-bold">{formatAmount(stats.totalActual)}</div>
           <div className="text-xs text-muted-foreground mt-1">
             {((stats.totalActual / stats.totalProjected) * 100).toFixed(1)}% of target
           </div>
@@ -135,7 +136,7 @@ export default function RevenueForecast() {
             <div className="text-xs text-muted-foreground">Growth Potential</div>
           </div>
           <div className="text-2xl font-bold text-[var(--success)]">
-            {formatINR(stats.totalProjected - stats.totalActual)}
+            {formatAmount(stats.totalProjected - stats.totalActual)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">Additional revenue</div>
         </div>
@@ -163,13 +164,13 @@ export default function RevenueForecast() {
                   </div>
                   <div className="flex items-center gap-4 text-sm">
                     <div className="text-right">
-                      <div className="font-medium">{formatINR(item.projected)}</div>
+                      <div className="font-medium">{formatAmount(item.projected)}</div>
                       <div className="text-xs text-muted-foreground">Target</div>
                     </div>
                     {item.actual > 0 && (
                       <div className="text-right">
                         <div className="font-medium text-[var(--success)]">
-                          {formatINR(item.actual)}
+                          {formatAmount(item.actual)}
                         </div>
                         <div className="text-xs text-muted-foreground">Actual</div>
                       </div>
@@ -208,7 +209,7 @@ export default function RevenueForecast() {
                         Actual
                       </span>
                     )}
-                    <span>{formatINR(Math.max(...data.map((d) => d.projected)))}</span>
+                    <span>{formatAmount(Math.max(...data.map((d) => d.projected)))}</span>
                   </div>
                 </div>
               </div>

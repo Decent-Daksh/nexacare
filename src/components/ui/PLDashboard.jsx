@@ -9,12 +9,13 @@ import {
   Activity,
 } from "lucide-react";
 import Badge from "./Badge";
-import { formatINR } from "../../lib/format";
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function PLDashboard() {
   const [plData, setPlData] = useState({});
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [loading, setLoading] = useState(true);
+  const { formatAmount } = useCurrency();
 
   // Mock P&L data - replace with actual API call
   useEffect(() => {
@@ -183,7 +184,7 @@ export default function PLDashboard() {
             <div className="text-xs text-muted-foreground">Total Revenue</div>
           </div>
           <div className="text-2xl font-bold text-[var(--success)]">
-            {formatINR(data.revenue?.total || 0)}
+            {formatAmount(data.revenue?.total || 0)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">
             +12.5% from last {selectedPeriod}
@@ -196,7 +197,7 @@ export default function PLDashboard() {
             <div className="text-xs text-muted-foreground">Total Costs</div>
           </div>
           <div className="text-2xl font-bold text-[var(--danger)]">
-            {formatINR(data.costs?.total || 0)}
+            {formatAmount(data.costs?.total || 0)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">50% of revenue</div>
         </div>
@@ -207,7 +208,7 @@ export default function PLDashboard() {
             <div className="text-xs text-muted-foreground">Net Profit</div>
           </div>
           <div className="text-2xl font-bold text-[var(--brand)]">
-            {formatINR(data.margins?.net || 0)}
+            {formatAmount(data.margins?.net || 0)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">
             {data.margins?.percentage.toFixed(1)}% margin
@@ -220,7 +221,7 @@ export default function PLDashboard() {
             <div className="text-xs text-muted-foreground">Profit per Patient</div>
           </div>
           <div className="text-2xl font-bold text-[var(--info)]">
-            {formatINR(Math.round((data.margins?.net || 0) / 450))} {/* Assuming 450 patients */}
+            {formatAmount(Math.round((data.margins?.net || 0) / 450))} {/* Assuming 450 patients */}
           </div>
           <div className="text-xs text-muted-foreground mt-1">Avg per visit</div>
         </div>
@@ -243,7 +244,7 @@ export default function PLDashboard() {
                       <span className="font-medium text-sm">{service.name}</span>
                     </div>
                     <div className="text-right">
-                      <div className="font-semibold">{formatINR(service.amount)}</div>
+                      <div className="font-semibold">{formatAmount(service.amount)}</div>
                       <div className="text-xs text-muted-foreground">
                         {service.percentage.toFixed(1)}%
                       </div>
@@ -272,7 +273,7 @@ export default function PLDashboard() {
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-sm">{cost.name}</span>
                   <div className="text-right">
-                    <div className="font-semibold">{formatINR(cost.amount)}</div>
+                    <div className="font-semibold">{formatAmount(cost.amount)}</div>
                     <div className="text-xs text-muted-foreground">
                       {cost.percentage.toFixed(1)}%
                     </div>
@@ -321,9 +322,9 @@ export default function PLDashboard() {
                 return (
                   <tr key={service.name} className={`${i % 2 ? "bg-surface/40" : ""}`}>
                     <td className="px-4 py-3 font-medium">{service.name}</td>
-                    <td className="px-4 py-3 text-right">{formatINR(service.revenue)}</td>
-                    <td className="px-4 py-3 text-right">{formatINR(service.costs)}</td>
-                    <td className="px-4 py-3 text-right font-medium">{formatINR(contribution)}</td>
+                    <td className="px-4 py-3 text-right">{formatAmount(service.revenue)}</td>
+                    <td className="px-4 py-3 text-right">{formatAmount(service.costs)}</td>
+                    <td className="px-4 py-3 text-right font-medium">{formatAmount(contribution)}</td>
                     <td className="px-4 py-3 text-right">
                       <span
                         className={isProfitable ? "text-[var(--success)]" : "text-[var(--danger)]"}

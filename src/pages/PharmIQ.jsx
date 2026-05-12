@@ -6,13 +6,13 @@ import ErrorState from "../components/ui/ErrorState";
 import Badge from "../components/ui/Badge";
 import Tabs from "../components/ui/Tabs";
 import StatCard from "../components/ui/StatCard";
-import { formatINR } from "../lib/format";
+import { useCurrency } from '../context/CurrencyContext';
 
 export default function PharmIQ() {
   const [tab, setTab] = useState("stock");
   const [q, setQ] = useState("");
   const { stock, alerts, reorderQueue, loading, error, refetch } = usePharmacy();
-
+  const { formatAmount } = useCurrency();
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorState message={error} onRetry={refetch} />;
 
@@ -89,7 +89,7 @@ export default function PharmIQ() {
                     </td>
                     <td className="px-4 py-3 text-xs">{s.expiry}</td>
                     <td className="px-4 py-3 text-muted-foreground">{s.supplier}</td>
-                    <td className="px-4 py-3 text-right font-mono">{formatINR(s.price)}</td>
+                    <td className="px-4 py-3 text-right font-mono">{formatAmount(s.price)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -14,14 +14,14 @@ import LoadingSpinner from "./LoadingSpinner";
 import ErrorState from "./ErrorState";
 import Badge from "./Badge";
 import Modal from "./Modal";
-import { formatINR } from "../../lib/format";
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function PayrollDashboard({ staffId, onViewDetail }) {
   const [selectedPayroll, setSelectedPayroll] = useState(null);
   const [showPayslipModal, setShowPayslipModal] = useState(false);
   const [showCalculationModal, setShowCalculationModal] = useState(false);
   const { payroll, loading, error, refetch, downloadSlip } = usePayrollHistory(staffId);
-
+  const { formatAmount } = useCurrency();
   // Mock enhanced payroll data with GST and tax calculations
   const [enhancedPayroll, setEnhancedPayroll] = useState([]);
 
@@ -82,32 +82,32 @@ Designation: Doctor
 Salary Period: ${payrollRecord.month}
 
 EARNINGS:
-Basic Salary: ${formatINR(payrollRecord.earnings?.basic || 0)}
-HRA: ${formatINR(payrollRecord.earnings?.hra || 0)}
-Conveyance: ${formatINR(payrollRecord.earnings?.conveyance || 0)}
-Medical Allowance: ${formatINR(payrollRecord.earnings?.medical || 0)}
-LTA: ${formatINR(payrollRecord.earnings?.lta || 0)}
-Special Allowance: ${formatINR(payrollRecord.earnings?.special || 0)}
-Overtime: ${formatINR(payrollRecord.earnings?.overtime || 0)}
+Basic Salary: ${formatAmount(payrollRecord.earnings?.basic || 0)}
+HRA: ${formatAmount(payrollRecord.earnings?.hra || 0)}
+Conveyance: ${formatAmount(payrollRecord.earnings?.conveyance || 0)}
+Medical Allowance: ${formatAmount(payrollRecord.earnings?.medical || 0)}
+LTA: ${formatAmount(payrollRecord.earnings?.lta || 0)}
+Special Allowance: ${formatAmount(payrollRecord.earnings?.special || 0)}
+Overtime: ${formatAmount(payrollRecord.earnings?.overtime || 0)}
 
-Total Earnings: ${formatINR(payrollRecord.totalEarnings || 0)}
+Total Earnings: ${formatAmount(payrollRecord.totalEarnings || 0)}
 
 DEDUCTIONS:
-Provident Fund: ${formatINR(payrollRecord.deductions?.pf || 0)}
-Professional Tax: ${formatINR(payrollRecord.deductions?.professionalTax || 0)}
-TDS: ${formatINR(payrollRecord.deductions?.tds || 0)}
-Insurance: ${formatINR(payrollRecord.deductions?.insurance || 0)}
-Loan Repayment: ${formatINR(payrollRecord.deductions?.loan || 0)}
+Provident Fund: ${formatAmount(payrollRecord.deductions?.pf || 0)}
+Professional Tax: ${formatAmount(payrollRecord.deductions?.professionalTax || 0)}
+TDS: ${formatAmount(payrollRecord.deductions?.tds || 0)}
+Insurance: ${formatAmount(payrollRecord.deductions?.insurance || 0)}
+Loan Repayment: ${formatAmount(payrollRecord.deductions?.loan || 0)}
 
-Total Deductions: ${formatINR(payrollRecord.totalDeductions || 0)}
+Total Deductions: ${formatAmount(payrollRecord.totalDeductions || 0)}
 
 TAXES (GST):
-CGST (9%): ${formatINR(payrollRecord.taxes?.cgst || 0)}
-SGST (9%): ${formatINR(payrollRecord.taxes?.sgst || 0)}
-IGST (0%): ${formatINR(payrollRecord.taxes?.igst || 0)}
-Total GST: ${formatINR(payrollRecord.taxes?.totalGST || 0)}
+CGST (9%): ${formatAmount(payrollRecord.taxes?.cgst || 0)}
+SGST (9%): ${formatAmount(payrollRecord.taxes?.sgst || 0)}
+IGST (0%): ${formatAmount(payrollRecord.taxes?.igst || 0)}
+Total GST: ${formatAmount(payrollRecord.taxes?.totalGST || 0)}
 
-NET SALARY: ${formatINR(payrollRecord.netSalary || 0)}
+NET SALARY: ${formatAmount(payrollRecord.netSalary || 0)}
 
 This is a computer generated payslip.
 Generated on: ${new Date().toLocaleDateString()}
@@ -139,7 +139,7 @@ Generated on: ${new Date().toLocaleDateString()}
             <DollarSign size={16} className="text-[var(--success)]" />
             <div className="text-xs text-muted-foreground">Total Earnings</div>
           </div>
-          <div className="text-2xl font-bold text-[var(--success)]">{formatINR(totalEarnings)}</div>
+          <div className="text-2xl font-bold text-[var(--success)]">{formatAmount(totalEarnings)}</div>
           <div className="text-xs text-muted-foreground mt-1">{enhancedPayroll.length} months</div>
         </div>
 
@@ -149,10 +149,10 @@ Generated on: ${new Date().toLocaleDateString()}
             <div className="text-xs text-muted-foreground">Total Deductions</div>
           </div>
           <div className="text-2xl font-bold text-[var(--danger)]">
-            {formatINR(totalDeductions)}
+            {formatAmount(totalDeductions)}
           </div>
           <div className="text-xs text-muted-foreground mt-1">
-            Avg: {formatINR(totalDeductions / enhancedPayroll.length)}
+            Avg: {formatAmount(totalDeductions / enhancedPayroll.length)}
           </div>
         </div>
 
@@ -161,7 +161,7 @@ Generated on: ${new Date().toLocaleDateString()}
             <Calculator size={16} className="text-[var(--brand)]" />
             <div className="text-xs text-muted-foreground">GST Paid</div>
           </div>
-          <div className="text-2xl font-bold text-[var(--brand)]">{formatINR(totalGST)}</div>
+          <div className="text-2xl font-bold text-[var(--brand)]">{formatAmount(totalGST)}</div>
           <div className="text-xs text-muted-foreground mt-1">CGST + SGST</div>
         </div>
 
@@ -170,7 +170,7 @@ Generated on: ${new Date().toLocaleDateString()}
             <TrendingUp size={16} className="text-[var(--info)]" />
             <div className="text-xs text-muted-foreground">Net Salary</div>
           </div>
-          <div className="text-2xl font-bold text-[var(--info)]">{formatINR(totalNetSalary)}</div>
+          <div className="text-2xl font-bold text-[var(--info)]">{formatAmount(totalNetSalary)}</div>
           <div className="text-xs text-muted-foreground mt-1">After all deductions</div>
         </div>
       </div>
@@ -219,16 +219,16 @@ Generated on: ${new Date().toLocaleDateString()}
                       })}
                     </td>
                     <td className="text-right px-4 py-3 text-[var(--success)]">
-                      {formatINR(record.totalEarnings)}
+                      {formatAmount(record.totalEarnings)}
                     </td>
                     <td className="text-right px-4 py-3 text-[var(--danger)]">
-                      {formatINR(record.totalDeductions)}
+                      {formatAmount(record.totalDeductions)}
                     </td>
                     <td className="text-right px-4 py-3 text-[var(--brand)]">
-                      {formatINR(record.taxes?.totalGST || 0)}
+                      {formatAmount(record.taxes?.totalGST || 0)}
                     </td>
                     <td className="text-right px-4 py-3 font-semibold text-foreground">
-                      {formatINR(record.netSalary)}
+                      {formatAmount(record.netSalary)}
                     </td>
                     <td className="text-center px-4 py-3">
                       <Badge variant={record.status === "paid" ? "success" : "warning"}>
@@ -294,12 +294,12 @@ Generated on: ${new Date().toLocaleDateString()}
                   {Object.entries(selectedPayroll.earnings || {}).map(([key, value]) => (
                     <div key={key} className="flex justify-between text-sm">
                       <span className="capitalize">{key.replace(/([A-Z])/g, " $1")}</span>
-                      <span className="font-medium">{formatINR(value)}</span>
+                      <span className="font-medium">{formatAmount(value)}</span>
                     </div>
                   ))}
                   <div className="border-t pt-2 flex justify-between font-semibold">
                     <span>Total Earnings</span>
-                    <span>{formatINR(selectedPayroll.totalEarnings)}</span>
+                    <span>{formatAmount(selectedPayroll.totalEarnings)}</span>
                   </div>
                 </div>
               </div>
@@ -311,12 +311,12 @@ Generated on: ${new Date().toLocaleDateString()}
                   {Object.entries(selectedPayroll.deductions || {}).map(([key, value]) => (
                     <div key={key} className="flex justify-between text-sm">
                       <span className="capitalize">{key.replace(/([A-Z])/g, " $1")}</span>
-                      <span className="font-medium">{formatINR(value)}</span>
+                      <span className="font-medium">{formatAmount(value)}</span>
                     </div>
                   ))}
                   <div className="border-t pt-2 flex justify-between font-semibold">
                     <span>Total Deductions</span>
-                    <span>{formatINR(selectedPayroll.totalDeductions)}</span>
+                    <span>{formatAmount(selectedPayroll.totalDeductions)}</span>
                   </div>
                 </div>
               </div>
@@ -330,25 +330,25 @@ Generated on: ${new Date().toLocaleDateString()}
                   <div>
                     <div className="text-xs text-muted-foreground">CGST (9%)</div>
                     <div className="font-semibold">
-                      {formatINR(selectedPayroll.taxes?.cgst || 0)}
+                      {formatAmount(selectedPayroll.taxes?.cgst || 0)}
                     </div>
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground">SGST (9%)</div>
                     <div className="font-semibold">
-                      {formatINR(selectedPayroll.taxes?.sgst || 0)}
+                      {formatAmount(selectedPayroll.taxes?.sgst || 0)}
                     </div>
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground">IGST (0%)</div>
                     <div className="font-semibold">
-                      {formatINR(selectedPayroll.taxes?.igst || 0)}
+                      {formatAmount(selectedPayroll.taxes?.igst || 0)}
                     </div>
                   </div>
                 </div>
                 <div className="border-t mt-4 pt-4 flex justify-between font-semibold">
                   <span>Total GST</span>
-                  <span>{formatINR(selectedPayroll.taxes?.totalGST || 0)}</span>
+                  <span>{formatAmount(selectedPayroll.taxes?.totalGST || 0)}</span>
                 </div>
               </div>
             </div>
@@ -358,7 +358,7 @@ Generated on: ${new Date().toLocaleDateString()}
               <div className="flex justify-between items-center">
                 <span className="font-semibold">Net Salary</span>
                 <span className="text-xl font-bold text-[var(--brand)]">
-                  {formatINR(selectedPayroll.netSalary)}
+                  {formatAmount(selectedPayroll.netSalary)}
                 </span>
               </div>
               <div className="text-xs text-muted-foreground mt-1">Earnings - Deductions - GST</div>
@@ -418,12 +418,12 @@ Generated on: ${new Date().toLocaleDateString()}
                     {Object.entries(selectedPayroll.earnings || {}).map(([key, value]) => (
                       <div key={key} className="flex justify-between">
                         <span className="capitalize">{key.replace(/([A-Z])/g, " $1")}</span>
-                        <span>{formatINR(value)}</span>
+                        <span>{formatAmount(value)}</span>
                       </div>
                     ))}
                     <div className="border-t pt-1 flex justify-between font-semibold">
                       <span>Total Earnings</span>
-                      <span>{formatINR(selectedPayroll.totalEarnings)}</span>
+                      <span>{formatAmount(selectedPayroll.totalEarnings)}</span>
                     </div>
                   </div>
                 </div>
@@ -434,12 +434,12 @@ Generated on: ${new Date().toLocaleDateString()}
                     {Object.entries(selectedPayroll.deductions || {}).map(([key, value]) => (
                       <div key={key} className="flex justify-between">
                         <span className="capitalize">{key.replace(/([A-Z])/g, " $1")}</span>
-                        <span>{formatINR(value)}</span>
+                        <span>{formatAmount(value)}</span>
                       </div>
                     ))}
                     <div className="border-t pt-1 flex justify-between font-semibold">
                       <span>Total Deductions</span>
-                      <span>{formatINR(selectedPayroll.totalDeductions)}</span>
+                      <span>{formatAmount(selectedPayroll.totalDeductions)}</span>
                     </div>
                   </div>
                 </div>
@@ -451,19 +451,19 @@ Generated on: ${new Date().toLocaleDateString()}
                   <div>
                     <div className="text-gray-600">CGST (9%)</div>
                     <div className="font-semibold">
-                      {formatINR(selectedPayroll.taxes?.cgst || 0)}
+                      {formatAmount(selectedPayroll.taxes?.cgst || 0)}
                     </div>
                   </div>
                   <div>
                     <div className="text-gray-600">SGST (9%)</div>
                     <div className="font-semibold">
-                      {formatINR(selectedPayroll.taxes?.sgst || 0)}
+                      {formatAmount(selectedPayroll.taxes?.sgst || 0)}
                     </div>
                   </div>
                   <div>
                     <div className="text-gray-600">Total GST</div>
                     <div className="font-semibold">
-                      {formatINR(selectedPayroll.taxes?.totalGST || 0)}
+                      {formatAmount(selectedPayroll.taxes?.totalGST || 0)}
                     </div>
                   </div>
                 </div>
@@ -472,7 +472,7 @@ Generated on: ${new Date().toLocaleDateString()}
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>Net Salary</span>
-                  <span>{formatINR(selectedPayroll.netSalary)}</span>
+                  <span>{formatAmount(selectedPayroll.netSalary)}</span>
                 </div>
               </div>
 

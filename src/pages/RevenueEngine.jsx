@@ -14,7 +14,7 @@ import LoadingSpinner from "../components/ui/LoadingSpinner";
 import ErrorState from "../components/ui/ErrorState";
 import StatCard from "../components/ui/StatCard";
 import Badge from "../components/ui/Badge";
-import { formatINR } from "../lib/format";
+import { useCurrency } from '../context/CurrencyContext';
 
 export default function RevenueEngine() {
   const { invoices, claims, forecast, loading, error, refetch } = useRevenue();
@@ -30,7 +30,10 @@ export default function RevenueEngine() {
     .filter((i) => i.status !== "Paid")
     .reduce((s, i) => s + i.amount, 0);
   const claimAmt = claims.reduce((s, c) => s + c.amount, 0);
+ 
 
+  const { formatAmount } = useCurrency();
+  
   return (
     <div className="space-y-5">
       <div>
@@ -44,26 +47,26 @@ export default function RevenueEngine() {
         <StatCard
           icon={IndianRupee}
           label="Collected (MTD)"
-          value={formatINR(collected)}
+          value={formatAmount(collected)}
           delta="+12%"
           accent="brand"
         />
         <StatCard 
           icon={FileText} 
           label="Outstanding" 
-          value={formatINR(pending)} 
+          value={formatAmount(pending)} 
           accent="warn" 
         />
         <StatCard
           icon={ShieldCheck}
           label="Claims in flight"
-          value={formatINR(claimAmt)}
+          value={formatAmount(claimAmt)}
           accent="info"
         />
         <StatCard
           icon={TrendingUp}
           label="Forecast (Jun)"
-          value={formatINR(612000)}
+          value={formatAmount(612000)}
           delta="+8.5%"
           accent="ai"
         />
@@ -90,7 +93,7 @@ export default function RevenueEngine() {
                   borderRadius: 12,
                   fontSize: 12,
                 }}
-                formatter={(v) => formatINR(v)}
+                formatter={(v) => formatAmount(v)}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Line
@@ -135,7 +138,7 @@ export default function RevenueEngine() {
                 <tr key={inv.id} className={`hover:bg-surface-alt ${i % 2 ? "bg-surface/40" : ""}`}>
                   <td className="px-4 py-2 font-mono text-xs">{inv.id}</td>
                   <td className="px-4 py-2">{inv.patientName}</td>
-                  <td className="px-4 py-2 text-right font-mono">{formatINR(inv.amount)}</td>
+                  <td className="px-4 py-2 text-right font-mono">{formatAmount(inv.amount)}</td>
                   <td className="px-4 py-2">
                     <Badge
                       variant={
@@ -171,7 +174,7 @@ export default function RevenueEngine() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono font-semibold">{formatINR(c.amount)}</div>
+                  <div className="font-mono font-semibold">{formatAmount(c.amount)}</div>
                   <Badge
                     variant={
                       c.status === "Approved"

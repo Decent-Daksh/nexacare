@@ -9,7 +9,7 @@ import {
   IndianRupee,
 } from "lucide-react";
 import Badge from "./Badge";
-import { formatINR } from "../../lib/format";
+import { useCurrency } from '../../context/CurrencyContext';
 
 const NUDGE_TYPES = {
   reminder: { label: "Payment Reminder", color: "info", icon: MessageCircle },
@@ -30,7 +30,7 @@ export default function OutstandingCollections() {
   const [nudges, setNudges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
-
+  const { formatAmount } = useCurrency();
   // Mock data - replace with actual API call
   useEffect(() => {
     const mockInvoices = [
@@ -168,11 +168,11 @@ export default function OutstandingCollections() {
         <h2 className="text-xl font-semibold">Outstanding Collections</h2>
         <div className="flex items-center gap-4 text-sm">
           <div className="text-right">
-            <div className="font-semibold">{formatINR(totalOutstanding)}</div>
+            <div className="font-semibold">{formatAmount(totalOutstanding)}</div>
             <div className="text-xs text-muted-foreground">Total Outstanding</div>
           </div>
           <div className="text-right">
-            <div className="font-semibold text-[var(--danger)]">{formatINR(overdueAmount)}</div>
+            <div className="font-semibold text-[var(--danger)]">{formatAmount(overdueAmount)}</div>
             <div className="text-xs text-muted-foreground">Overdue</div>
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function OutstandingCollections() {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <div className="font-medium">{formatINR(invoice.amount)}</div>
+                      <div className="font-medium">{formatAmount(invoice.amount)}</div>
                       {invoice.insuranceClaim && (
                         <Badge variant="info" className="text-xs mt-1">
                           Insurance

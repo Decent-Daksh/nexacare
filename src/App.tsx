@@ -1,6 +1,7 @@
 import { type ComponentType, type Dispatch, type SetStateAction, useState } from "react";
 import Sidebar from "./components/layout/Sidebar";
 import Topbar from "./components/layout/Topbar";
+import { CurrencyProvider } from './context/CurrencyContext';
 import { AuthProvider } from "./context/AuthContext";
 import { ToastProvider } from "./context/ToastContext";
 
@@ -53,8 +54,10 @@ export default function App() {
   const Page = PAGES[page];
 
   return (
+  
     <AuthProvider>
       <ToastProvider>
+        <CurrencyProvider>
         <div className="min-h-screen bg-surface flex">
           <Sidebar
             active={page}
@@ -75,7 +78,9 @@ export default function App() {
             </main>
           </div>
         </div>
+        </CurrencyProvider>
       </ToastProvider>
     </AuthProvider>
+  
   );
 }
